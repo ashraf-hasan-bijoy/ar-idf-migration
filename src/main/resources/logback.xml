@@ -1,0 +1,28 @@
+<configuration>
+
+    <appender name="FILE" class="ch.qos.logback.core.FileAppender">
+        <file>/tmp/iba-migration.log</file>
+        <encoder>
+            <pattern>%date %level %logger [%file:%line] %msg%n</pattern>
+        </encoder>
+    </appender>
+
+    <!--<appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">-->
+        <!--<encoder>-->
+            <!--<pattern>%date %level %logger [%file:%line] %msg%n</pattern>-->
+        <!--</encoder>-->
+    <!--</appender>-->
+
+    <logger name="net.therap" level="debug"/>
+
+    <logger name="org.springframework" level="info"/>
+    <logger name="org.hibernate" level="info"/>
+    <logger name="org.hibernate.sql" level="info"/>
+    <logger name="org.hibernate.cfg" level="debug"/>
+
+    <root level="warn">
+        <!--<appender-ref ref="STDOUT"/>-->
+        <appender-ref ref="FILE"/>
+    </root>
+
+</configuration>
