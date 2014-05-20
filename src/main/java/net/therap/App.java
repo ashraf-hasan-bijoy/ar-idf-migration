@@ -1,6 +1,6 @@
 package net.therap;
 
-import net.therap.service.TestService;
+import net.therap.dao.ar.ArEntityDao;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationContext;
@@ -26,7 +26,6 @@ public class App {
             System.out.println("Insufficient Argument !! Enter a valid Path");
         } else {
 
-            ctx.getBean(TestService.class).test();
         }
 
         log.info("End Migration @ {}", new Date());

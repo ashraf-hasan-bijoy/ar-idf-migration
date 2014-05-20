@@ -1,4 +1,4 @@
-package net.therap.model;
+package net.therap.model.therap;
 
 import net.therap.db.archive.annotations.Archivable;
 import net.therap.db.archive.annotations.ArchiveProperty;

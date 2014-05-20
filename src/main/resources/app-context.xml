@@ -10,19 +10,40 @@
        http://www.springframework.org/schema/tx
        http://www.springframework.org/schema/tx/spring-tx.xsd">
 
-    <context:component-scan base-package="net.therap.service"/>
+    <context:component-scan base-package="net.therap.dao"/>
 
     <bean class="net.therap.config.DbConfig" id="config"/>
 
-    <bean id="entityManagerFactory" class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean">
-        <property name="dataSource" ref="dataSource"/>
+    <!-- Config for oracle database -->
+
+    <bean id="oracleEntityManagerFactory" class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean">
+        <property name="packagesToScan">
+            <list>
+                <value>net.therap.db</value>
+                <value>net.therap.model.therap</value>
+            </list>
+        </property>
+        <property name="dataSource" ref="therapDataSource"/>
         <property name="persistenceUnitName" value="therap"/>
     </bean>
 
-    <bean id="transactionManager" class="org.springframework.orm.jpa.JpaTransactionManager">
-        <property name="entityManagerFactory" ref="entityManagerFactory"/>
+    <bean id="oracleTm" class="org.springframework.orm.jpa.JpaTransactionManager">
+        <property name="entityManagerFactory" ref="oracleEntityManagerFactory"/>
     </bean>
 
-    <tx:annotation-driven transaction-manager="transactionManager"/>
+    <tx:annotation-driven transaction-manager="oracleTm"/>
 
+    <!-- Config for h2db database -->
+
+    <bean id="h2dbEntityManagerFactory" class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean">
+        <property name="dataSource" ref="arDataSource"/>
+        <property name="persistenceUnitName" value="ar"/>
+        <property name="packagesToScan" value="net.therap.model.ar"/>
+    </bean>
+
+    <bean id="h2dbTm" class="org.springframework.orm.jpa.JpaTransactionManager">
+        <property name="entityManagerFactory" ref="oracleEntityManagerFactory"/>
+    </bean>
+
+    <tx:annotation-driven transaction-manager="h2dbTm"/>
 </beans>

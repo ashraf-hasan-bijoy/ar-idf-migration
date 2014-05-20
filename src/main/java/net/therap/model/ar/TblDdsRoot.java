@@ -11,7 +11,7 @@ import java.util.Date;
  * @since 4/23/14  12:33 PM
  */
 @Entity
-@Table(name = "AR_CMS_ROOT")
+@Table(name = "AR_DDS_ROOT")
 public class TblDdsRoot {
 
     @Id

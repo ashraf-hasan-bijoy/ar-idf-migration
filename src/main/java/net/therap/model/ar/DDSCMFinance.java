@@ -11,7 +11,7 @@ import java.util.Date;
  * @since 5/15/14  4:29 PM
  */
 @Entity
-@Table(name = "AR_CMS_DDSCMFINANCE")
+@Table(name = "AR_DDS_CM_FINANCE")
 public class DDSCMFinance {
     @Id
     @Column(name = "DDS_Id")

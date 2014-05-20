@@ -11,13 +11,21 @@ import org.springframework.jdbc.datasource.DriverManagerDataSource;
  */
 @Configuration
 public class DbConfig {
-    @Bean(name = "dataSource")
-    public DataSource dataSource() {
+    @Bean(name = "therapDataSource")
+    public DataSource getTherapDataSource() {
         DriverManagerDataSource driverManagerDataSource = new DriverManagerDataSource();
         driverManagerDataSource.setDriverClassName("oracle.jdbc.OracleDriver");
         driverManagerDataSource.setUrl(System.getProperty("url"));
         driverManagerDataSource.setUsername(System.getProperty("userName"));
         driverManagerDataSource.setPassword(System.getProperty("password"));
+        return driverManagerDataSource;
+    }
+
+    @Bean(name = "arDataSource")
+    public DataSource getArDataSource() {
+        DriverManagerDataSource driverManagerDataSource = new DriverManagerDataSource();
+        driverManagerDataSource.setDriverClassName("org.h2.Driver");
+        driverManagerDataSource.setUrl(System.getProperty("arDbUrl"));
         return driverManagerDataSource;
     }
 }

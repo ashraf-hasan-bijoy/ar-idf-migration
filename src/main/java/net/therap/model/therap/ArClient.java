@@ -1,11 +1,10 @@
-package net.therap.model;
+package net.therap.model.therap;
 
 import net.therap.db.archive.ArchiveConstants;
 import net.therap.db.archive.annotations.*;
 import net.therap.db.entity.common.Client;
 import net.therap.db.entity.common.Persistent;
 import net.therap.db.entity.common.Provider;
-import net.therap.db.util.CommonForm;
 
 import javax.persistence.*;
 import javax.validation.constraints.Size;
