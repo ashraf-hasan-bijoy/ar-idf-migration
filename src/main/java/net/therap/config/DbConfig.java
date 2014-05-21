@@ -23,9 +23,11 @@ public class DbConfig {
 
     @Bean(name = "arDataSource")
     public DataSource getArDataSource() {
+        String rootUrl = "java:h2:file:";
+
         DriverManagerDataSource driverManagerDataSource = new DriverManagerDataSource();
         driverManagerDataSource.setDriverClassName("org.h2.Driver");
-        driverManagerDataSource.setUrl(System.getProperty("arDbUrl"));
+        driverManagerDataSource.setUrl(rootUrl + System.getProperty("dbDir"));
         return driverManagerDataSource;
     }
 }

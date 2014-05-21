@@ -1,6 +1,6 @@
 package net.therap;
 
-import net.therap.dao.ar.ArEntityDao;
+import net.therap.service.common.ArIdfMigrationService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationContext;
@@ -22,11 +22,7 @@ public class App {
 
         ApplicationContext ctx = new ClassPathXmlApplicationContext("app-context.xml");
 
-        if (args.length != 1) {
-            System.out.println("Insufficient Argument !! Enter a valid Path");
-        } else {
-
-        }
+        ctx.getBean(ArIdfMigrationService.class).processMigration();
 
         log.info("End Migration @ {}", new Date());
         log.info("Elapsed time {}ms", (System.currentTimeMillis() - start));

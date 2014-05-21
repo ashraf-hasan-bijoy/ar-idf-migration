@@ -10,7 +10,7 @@
        http://www.springframework.org/schema/tx
        http://www.springframework.org/schema/tx/spring-tx.xsd">
 
-    <context:component-scan base-package="net.therap.dao"/>
+    <context:component-scan base-package="net.therap"/>
 
     <bean class="net.therap.config.DbConfig" id="config"/>
 
@@ -40,10 +40,4 @@
         <property name="persistenceUnitName" value="ar"/>
         <property name="packagesToScan" value="net.therap.model.ar"/>
     </bean>
-
-    <bean id="h2dbTm" class="org.springframework.orm.jpa.JpaTransactionManager">
-        <property name="entityManagerFactory" ref="oracleEntityManagerFactory"/>
-    </bean>
-
-    <tx:annotation-driven transaction-manager="h2dbTm"/>
 </beans>
