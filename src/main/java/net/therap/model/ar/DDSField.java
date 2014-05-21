@@ -12,7 +12,7 @@ import java.util.Date;
  */
 @Entity
 @Table(name = "AR_DDS_FIELD")
-public class TblDdsField {
+public class DDSField {
     @Id
     @Column(name = "client_id")
     private int fieldClientId;
