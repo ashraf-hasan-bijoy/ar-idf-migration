@@ -12,7 +12,7 @@ import java.util.Date;
  */
 @Entity
 @Table(name = "AR_DDS_CM_FINANCE")
-public class DDSCMFinance {
+public class DdsCmFinance {
     @Id
     @Column(name = "DDS_Id")
     private Integer ddsId;

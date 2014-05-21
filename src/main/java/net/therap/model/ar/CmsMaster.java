@@ -12,7 +12,7 @@ import java.util.Date;
  */
 @Entity
 @Table(name = "AR_CMS_MASTER")
-public class CMSMaster {
+public class CmsMaster {
     @Id
     @Column(name = "CMS_ID")
     private long cmsId;
