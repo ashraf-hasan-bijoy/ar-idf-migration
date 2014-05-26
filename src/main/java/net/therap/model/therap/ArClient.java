@@ -3,8 +3,10 @@ package net.therap.model.therap;
 import net.therap.db.archive.ArchiveConstants;
 import net.therap.db.archive.annotations.*;
 import net.therap.db.entity.common.Client;
+import net.therap.db.entity.common.Login;
 import net.therap.db.entity.common.Persistent;
 import net.therap.db.entity.common.Provider;
+import net.therap.db.util.CommonForm;
 
 import javax.persistence.*;
 import javax.validation.constraints.Size;
@@ -17,8 +19,12 @@ import java.util.List;
  */
 @Entity
 @Table(name = "ar_client")
-@Archivable(nodeName = "", formType = "",
-        viewTech = ArchiveConstants.VIEW_TECH_XSL, archiveVersion = "2014.1.1")
+@NamedQueries({
+        @NamedQuery(name = "ArClient.findByClient", query = "SELECT arc FROM ArClient arc WHERE arc.client = :client"),
+        @NamedQuery(name = "ArClient.findByFormId", query = "SELECT arc FROM ArClient arc WHERE arc.formId = :formId")
+})
+//@Archivable(nodeName = CommonForm.FT_AR_IDF_EXT, formType = CommonForm.FT_AR_IDF_EXT,
+//        viewTech = ArchiveConstants.VIEW_TECH_XSL, archiveVersion = "2014.1.1")
 public class ArClient extends Persistent {
 
     private static final long serialVersionUID = 1L;
@@ -47,8 +53,8 @@ public class ArClient extends Persistent {
     @Size(max = 1)
     private String ddsCaseloadStatus;
 
-    @Column(length = 512)
-    @Size(max = 512)
+    @Column(length = 1)
+    @Size(max = 1)
     private String ddsCaseloadCloseReason;
 
     @Column(length = 8)
@@ -58,10 +64,10 @@ public class ArClient extends Persistent {
     @Temporal(TemporalType.TIMESTAMP)
     private Date diplomaDate;
 
-    @Column(length = 64)
+    @Column(length = 2)
     private String primaryDisability;
 
-    @Column(length = 64)
+    @Column(length = 2)
     private String secondaryDisability;
 
     @Column(length = 1)
@@ -77,7 +83,7 @@ public class ArClient extends Persistent {
     private String numberInHousehold;
 
     @Column(columnDefinition = "NUMBER (10, 2)")
-    private double monthlyMedicalBill;
+    private Double monthlyMedicalBill;
 
     @Temporal(TemporalType.TIMESTAMP)
     private Date ssnDenialLetterDate;
@@ -96,19 +102,12 @@ public class ArClient extends Persistent {
     private Boolean medicaidTypeArkids;
 
     @Temporal(TemporalType.TIMESTAMP)
-    private Date medicaidDenialBeginDate;
-
-    @Temporal(TemporalType.TIMESTAMP)
-    private Date medicaidDenialEndDate;
-
-    private Boolean medicaidDenialOptionToDelete;
-
-    @Temporal(TemporalType.TIMESTAMP)
     private Date resources5WeekSpinDown;
 
     @Temporal(TemporalType.TIMESTAMP)
-    private Date disabilitySSI;
+    private Date disabilitySsi;
 
+    @Column(name = "disability_medicaid_denl_date")
     @Temporal(TemporalType.TIMESTAMP)
     private Date disabilityMedicaidDenialDate;
 
@@ -128,14 +127,14 @@ public class ArClient extends Persistent {
     private Date parentsRefusalDate;
 
     @Column
-    private long ddsId;
+    private Long ddsId;
 
     @Column
-    private long cmsId;
+    private Long cmsId;
 
     @Column(length = 1)
     @Size(max = 1)
-    private String cmsStatus;
+    private String cmsStatusCode;
 
     @Temporal(TemporalType.TIMESTAMP)
     private Date cmsApplyDate;
@@ -143,7 +142,9 @@ public class ArClient extends Persistent {
     @Temporal(TemporalType.TIMESTAMP)
     private Date cmsReapplyDate;
 
-    private int cmsCommOfficeAreaNumber;
+    @Column(length = 2)
+    @Size(max = 2)
+    private String cmsCommOfficeAreaCode;
 
     @Column(length = 1)
     @Size(max = 1)
@@ -153,7 +154,7 @@ public class ArClient extends Persistent {
     @Size(max = 2)
     private String cmsMedicaidCategory;
 
-    private long cmsMedicaidProviderNo;
+    private Long cmsMedicaidProviderNo;
 
     @Column(length = 32)
     @Size(max = 32)
@@ -162,6 +163,12 @@ public class ArClient extends Persistent {
     @Column(length = 1)
     @Size(max = 1)
     private String thirdPartyLiability;
+
+    @ManyToOne
+    private Login createdBy;
+
+    @ManyToOne
+    private Login updatedBy;
 
     @ElementCollection
     @CollectionTable(name = "ar_eligibility_duration")
@@ -174,6 +181,12 @@ public class ArClient extends Persistent {
     @OrderColumn(name = "idx")
     @ArchiveProperty(embeddable = true)
     private List<ArClientFamilyMember> familyMembers;
+
+    @ElementCollection
+    @CollectionTable(name = "ar_client_medical_denial")
+    @OrderColumn(name = "idx")
+    @ArchiveProperty(embeddable = true)
+    private List<ArClientMedicaidDenial> medicaidDenials;
 
     public long getId() {
         return id;
@@ -279,11 +292,11 @@ public class ArClient extends Persistent {
         this.numberInHousehold = numberInHousehold;
     }
 
-    public double getMonthlyMedicalBill() {
+    public Double getMonthlyMedicalBill() {
         return monthlyMedicalBill;
     }
 
-    public void setMonthlyMedicalBill(double monthlyMedicalBill) {
+    public void setMonthlyMedicalBill(Double monthlyMedicalBill) {
         this.monthlyMedicalBill = monthlyMedicalBill;
     }
 
@@ -343,30 +356,6 @@ public class ArClient extends Persistent {
         this.medicaidTypeArkids = medicaidTypeArkids;
     }
 
-    public Date getMedicaidDenialBeginDate() {
-        return medicaidDenialBeginDate;
-    }
-
-    public void setMedicaidDenialBeginDate(Date medicaidDenialBeginDate) {
-        this.medicaidDenialBeginDate = medicaidDenialBeginDate;
-    }
-
-    public Date getMedicaidDenialEndDate() {
-        return medicaidDenialEndDate;
-    }
-
-    public void setMedicaidDenialEndDate(Date medicaidDenialEndDate) {
-        this.medicaidDenialEndDate = medicaidDenialEndDate;
-    }
-
-    public Boolean getMedicaidDenialOptionToDelete() {
-        return medicaidDenialOptionToDelete;
-    }
-
-    public void setMedicaidDenialOptionToDelete(Boolean medicaidDenialOptionToDelete) {
-        this.medicaidDenialOptionToDelete = medicaidDenialOptionToDelete;
-    }
-
     public Date getResources5WeekSpinDown() {
         return resources5WeekSpinDown;
     }
@@ -375,12 +364,12 @@ public class ArClient extends Persistent {
         this.resources5WeekSpinDown = resources5WeekSpinDown;
     }
 
-    public Date getDisabilitySSI() {
-        return disabilitySSI;
+    public Date getDisabilitySsi() {
+        return disabilitySsi;
     }
 
-    public void setDisabilitySSI(Date disabilitySSI) {
-        this.disabilitySSI = disabilitySSI;
+    public void setDisabilitySsi(Date disabilitySsi) {
+        this.disabilitySsi = disabilitySsi;
     }
 
     public Date getDisabilityMedicaidDenialDate() {
@@ -431,28 +420,28 @@ public class ArClient extends Persistent {
         this.parentsRefusalDate = parentsRefusalDate;
     }
 
-    public long getDdsId() {
+    public Long getDdsId() {
         return ddsId;
     }
 
-    public void setDdsId(long ddsId) {
+    public void setDdsId(Long ddsId) {
         this.ddsId = ddsId;
     }
 
-    public long getCmsId() {
+    public Long getCmsId() {
         return cmsId;
     }
 
-    public void setCmsId(long cmsId) {
+    public void setCmsId(Long cmsId) {
         this.cmsId = cmsId;
     }
 
-    public String getCmsStatus() {
-        return cmsStatus;
+    public String getCmsStatusCode() {
+        return cmsStatusCode;
     }
 
-    public void setCmsStatus(String cmsStatus) {
-        this.cmsStatus = cmsStatus;
+    public void setCmsStatusCode(String cmsStatusCode) {
+        this.cmsStatusCode = cmsStatusCode;
     }
 
     public Date getCmsApplyDate() {
@@ -471,12 +460,12 @@ public class ArClient extends Persistent {
         this.cmsReapplyDate = cmsReapplyDate;
     }
 
-    public int getCmsCommOfficeAreaNumber() {
-        return cmsCommOfficeAreaNumber;
+    public String getCmsCommOfficeAreaCode() {
+        return cmsCommOfficeAreaCode;
     }
 
-    public void setCmsCommOfficeAreaNumber(int cmsCommOfficeAreaNumber) {
-        this.cmsCommOfficeAreaNumber = cmsCommOfficeAreaNumber;
+    public void setCmsCommOfficeAreaCode(String cmsCommOfficeAreaCode) {
+        this.cmsCommOfficeAreaCode = cmsCommOfficeAreaCode;
     }
 
     public String getCmsMedicaidStatus() {
@@ -495,11 +484,11 @@ public class ArClient extends Persistent {
         this.cmsMedicaidCategory = cmsMedicaidCategory;
     }
 
-    public long getCmsMedicaidProviderNo() {
+    public Long getCmsMedicaidProviderNo() {
         return cmsMedicaidProviderNo;
     }
 
-    public void setCmsMedicaidProviderNo(long cmsMedicaidProviderNo) {
+    public void setCmsMedicaidProviderNo(Long cmsMedicaidProviderNo) {
         this.cmsMedicaidProviderNo = cmsMedicaidProviderNo;
     }
 
@@ -519,6 +508,22 @@ public class ArClient extends Persistent {
         this.thirdPartyLiability = thirdPartyLiability;
     }
 
+    public Login getCreatedBy() {
+        return createdBy;
+    }
+
+    public void setCreatedBy(Login createdBy) {
+        this.createdBy = createdBy;
+    }
+
+    public Login getUpdatedBy() {
+        return updatedBy;
+    }
+
+    public void setUpdatedBy(Login updatedBy) {
+        this.updatedBy = updatedBy;
+    }
+
     public List<ArEligibilityDuration> getEligibilityDurations() {
         return eligibilityDurations;
     }
@@ -533,5 +538,13 @@ public class ArClient extends Persistent {
 
     public void setFamilyMembers(List<ArClientFamilyMember> familyMembers) {
         this.familyMembers = familyMembers;
+    }
+
+    public List<ArClientMedicaidDenial> getMedicaidDenials() {
+        return medicaidDenials;
+    }
+
+    public void setMedicaidDenials(List<ArClientMedicaidDenial> medicaidDenials) {
+        this.medicaidDenials = medicaidDenials;
     }
 }

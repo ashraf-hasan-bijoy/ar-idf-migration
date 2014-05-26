@@ -24,9 +24,9 @@ public class ArDataService {
     private EntityManager em;
 
 
-    public int getDbsRootCount(){
-        return em.createQuery("SELECT COUNT(root) FROM DdsRoot root", BigDecimal.class)
-                .getSingleResult().intValue();
+    public long getDbsRootCount(){
+        return (Long) em.createQuery("SELECT COUNT(root) FROM DdsRoot root")
+                .getSingleResult();
     }
 
     public List<DdsRoot> getDdsRoots(int firstResult, int maxResult){
@@ -46,9 +46,9 @@ public class ArDataService {
     }
 
 
-    public int getCmsMasterCount(){
-        return em.createQuery("SELECT COUNT(master) FROM CmsMaster master", BigDecimal.class)
-                .getSingleResult().intValue();
+    public long getCmsMasterCount(){
+        return (Long) em.createQuery("SELECT COUNT(master) FROM CmsMaster master")
+                .getSingleResult();
     }
 
     public List<CmsMaster> getCmsMasters(int firstResult, int maxResult){
@@ -58,7 +58,7 @@ public class ArDataService {
                 .getResultList();
     }
 
-    public CmsMaster getCmsMasterByClientId(int clientId){
+    public CmsMaster getCmsMasterByClientId(long clientId){
         List<CmsMaster> cmsMasters = em.createQuery("SELECT master FROM CmsMaster master" +
                 " WHERE master.cmsPcpExemptDate = :clientId", CmsMaster.class)
                 .setParameter("clientId", clientId)
@@ -67,7 +67,7 @@ public class ArDataService {
         return CollectionUtils.isNotEmpty(cmsMasters) ? cmsMasters.get(0) : null;
     }
 
-    public DdsCmFinance getDdsCmFinanceByClientId(int clientId){
+    public DdsCmFinance getDdsCmFinanceByClientId(long clientId){
         List<DdsCmFinance> ddsCmFinances = em.createQuery("SELECT finance FROM DdsCmFinance finance" +
                 " WHERE finance.ddsId = :clientId", DdsCmFinance.class)
                 .setParameter("clientId", clientId)
@@ -76,16 +76,14 @@ public class ArDataService {
         return CollectionUtils.isNotEmpty(ddsCmFinances) ? ddsCmFinances.get(0) : null;
     }
 
-    public MedicalDenial getMedicalDenialByClientId(int clientId) {
-        List<MedicalDenial> medicalDenials = em.createQuery("SELECT med FROM MedicalDenial med" +
-                " WHERE med.clientId = :clientId", MedicalDenial.class)
+    public List<MedicaidDenial> getMedicaidDenialsByClientId(long clientId) {
+        return em.createQuery("SELECT med FROM MedicaidDenial med" +
+                " WHERE med.clientId = :clientId", MedicaidDenial.class)
                 .setParameter("clientId", clientId)
                 .getResultList();
-
-        return CollectionUtils.isNotEmpty(medicalDenials) ? medicalDenials.get(0) : null;
     }
 
-    public DdsField getDdsFieldByClientId(int clientId){
+    public DdsField getDdsFieldByClientId(long clientId){
         List<DdsField> ddsFields = em.createQuery("SELECT field FROM DdsField field" +
                 " WHERE field.fieldClientId = :clientId", DdsField.class)
                 .setParameter("clientId", clientId)

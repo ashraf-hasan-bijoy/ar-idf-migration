@@ -16,7 +16,7 @@ public class DdsRoot {
 
     @Id
     @Column(name = "client_id")
-    private int clientId;
+    private long clientId;
     @Column(name = "client_ssn")
     private int clientSsn;
     @Column(name = "client_medicaid_no")
@@ -62,11 +62,11 @@ public class DdsRoot {
     @Column(name = "client_sub_disability_2")
     private String clientSubDisability2;
 
-    public int getClientId() {
+    public long getClientId() {
         return clientId;
     }
 
-    public void setClientId(int clientId) {
+    public void setClientId(long clientId) {
         this.clientId = clientId;
     }
 

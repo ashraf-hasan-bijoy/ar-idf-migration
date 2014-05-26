@@ -2,6 +2,7 @@ package net.therap.model.therap;
 
 import net.therap.db.entity.common.Client;
 import net.therap.db.entity.common.ClientDetail;
+import net.therap.db.entity.common.Race;
 import net.therap.db.entity.medicalInfo.IndividualDiagnosis;
 import net.therap.util.CollectionUtils;
 

@@ -24,7 +24,7 @@ public class ArClientFamilyMember implements Serializable {
     private String relationship;
 
     @ArchiveProperty(embeddable = true)
-    private int age;
+    private Integer age;
 
     @ArchiveProperty(embeddable = true)
     private double monthlyIncome;
@@ -49,11 +49,11 @@ public class ArClientFamilyMember implements Serializable {
         this.relationship = relationship;
     }
 
-    public int getAge() {
+    public Integer getAge() {
         return age;
     }
 
-    public void setAge(int age) {
+    public void setAge(Integer age) {
         this.age = age;
     }
 

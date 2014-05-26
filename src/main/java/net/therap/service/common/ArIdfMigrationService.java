@@ -2,6 +2,7 @@ package net.therap.service.common;
 
 import net.therap.db.entity.common.Client;
 import net.therap.db.entity.common.ClientDetail;
+import net.therap.db.entity.common.Provider;
 import net.therap.db.entity.medicalInfo.DiagnosisCode;
 import net.therap.db.entity.medicalInfo.IndividualDiagnosis;
 import net.therap.model.therap.ArClient;
@@ -29,6 +30,7 @@ public class ArIdfMigrationService {
     private static final int MAX_ROWS = 500;
     private static final Logger log = LoggerFactory.getLogger(ArIdfMigrationService.class);
 
+    private Provider provider;
     @Autowired
     private ArDataService arDataService;
 
@@ -36,12 +38,13 @@ public class ArIdfMigrationService {
     private TherapDataService therapDataService;
 
     public void processMigration() {
+        provider = therapDataService.getProvider("DDD-AR");
         migrateForCMSMaster();
         migrateForDDSRoot();
     }
 
     public void migrateForCMSMaster() {
-        int rowCount = arDataService.getCmsMasterCount();
+        long rowCount = arDataService.getCmsMasterCount();
         int firstResult = 0;
 
         while (firstResult <= rowCount) {
@@ -61,7 +64,7 @@ public class ArIdfMigrationService {
     }
 
     public void migrateForDDSRoot() {
-        int rowCount = arDataService.getDbsRootCount();
+        long rowCount = arDataService.getDbsRootCount();
         int firstResult = 0;
 
         while (firstResult <= rowCount) {
@@ -69,7 +72,7 @@ public class ArIdfMigrationService {
 
             if (CollectionUtils.isNotEmpty(ddsRoots)) {
                 for (DdsRoot root : ddsRoots) {
-                    int clientId = root.getClientId();
+                    long clientId = root.getClientId();
                     CmsMaster cmsMaster = arDataService.getCmsMasterByClientId(clientId);
 
                     if (cmsMaster != null) {
@@ -85,15 +88,15 @@ public class ArIdfMigrationService {
 
     }
 
-    public void migrateToTherapIdf(CmsMaster master, DdsRoot ddsRoot, int clientId) {
+    public void migrateToTherapIdf(CmsMaster master, DdsRoot ddsRoot, long clientId) {
 
         DdsCmFinance finance = arDataService.getDdsCmFinanceByClientId(clientId);
-        MedicalDenial denial = arDataService.getMedicalDenialByClientId(clientId);
+        List<MedicaidDenial> denials = arDataService.getMedicaidDenialsByClientId(clientId);
         DdsField field = arDataService.getDdsFieldByClientId(clientId);
 
-        Client client = TherapDomainFactory.createClient(master, ddsRoot);
+        Client client = TherapDomainFactory.createClient(master, ddsRoot, provider, therapDataService.getArClientOversightId());
         ClientDetail clientDetail = TherapDomainFactory.createClientDetail(master, ddsRoot);
-        ArClient arClient = TherapDomainFactory.createArClient(master, ddsRoot, finance, denial, field);
+        ArClient arClient = TherapDomainFactory.createArClient(master, ddsRoot, finance, denials, field);
         List<IndividualDiagnosis> individualDiagnoses = getIndividualDiagnosisList(master);
 
         therapDataService.saveTherapIdf(new MigrationDataUnit(client, clientDetail, arClient, individualDiagnoses));

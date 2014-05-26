@@ -19,7 +19,6 @@
 
     <persistence-unit name="ar">
         <provider>org.hibernate.ejb.HibernatePersistence</provider>
-        <class>net.therap.model.ar.TblDdsField</class>
         <properties>
             <property name="hibernate.dialect" value="org.hibernate.dialect.H2Dialect"/>
             <property name="hibernate.ejb.naming_strategy" value="net.therap.config.TherapNamingStrategy"/>
