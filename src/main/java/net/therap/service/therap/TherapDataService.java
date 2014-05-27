@@ -29,17 +29,21 @@ public class TherapDataService {
     private EntityManager em;
 
     public void saveTherapIdf(MigrationDataUnit unit) {
-        em.persist(unit.getClient());
-        em.persist(unit.getClientDetail());
-        em.persist(unit.getArClient());
+        try {
+            em.persist(unit.getClient());
+            em.persist(unit.getClientDetail());
+            em.persist(unit.getArClient());
 
-        if (CollectionUtils.isNotEmpty(unit.getIndividualDiagnosisList())) {
-            for (IndividualDiagnosis diagnosis : unit.getIndividualDiagnosisList()) {
-                em.persist(diagnosis);
+            if (CollectionUtils.isNotEmpty(unit.getIndividualDiagnosisList())) {
+                for (IndividualDiagnosis diagnosis : unit.getIndividualDiagnosisList()) {
+                    em.persist(diagnosis);
+                }
             }
+            em.flush();
+            log.debug("Successfully saved. " + unit.getClientInfo());
+        } catch (Exception e) {
+            log.debug("Failed. " + unit.getClientInfo());
         }
-
-        log.debug("Saved : " + unit.getClient().getId() + unit.getClient().getFirstName() + unit.getClient().getProvider().getId());
     }
 
     public DiagnosisCode getIndividualDiagnosis(String code) {

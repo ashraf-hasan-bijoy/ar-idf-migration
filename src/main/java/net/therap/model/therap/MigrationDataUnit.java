@@ -6,6 +6,7 @@ import net.therap.db.entity.common.ClientDetail;
 import net.therap.db.entity.common.Race;
 import net.therap.db.entity.medicalInfo.IndividualDiagnosis;
 import net.therap.util.CollectionUtils;
+import net.therap.util.StringUtils;
 
 import java.util.List;
 
@@ -68,5 +69,13 @@ public class MigrationDataUnit {
 
     public void setIndividualDiagnosisList(List<IndividualDiagnosis> individualDiagnosisList) {
         this.individualDiagnosisList = individualDiagnosisList;
+    }
+
+    public String getClientInfo(){
+        return "Client Name : " + StringUtils.join(client.getLastName(), client.getMiddleName(), client.getFirstName())  +
+                " DDS ID :" + arClient.getDdsId() +
+                " CMS ID :" + arClient.getCmsId() +
+                " SSN Number :" + client.getSsn() +
+                " Date of Birth :" + client.getBirthDate();
     }
 }

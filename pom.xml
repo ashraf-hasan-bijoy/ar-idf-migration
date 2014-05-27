@@ -10,7 +10,7 @@
 
     <packaging>jar</packaging>
 
-    <name>iba-migration</name>
+    <name>idf-migration</name>
     <url>http://maven.apache.org</url>
 
     <properties>
