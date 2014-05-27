@@ -36,7 +36,7 @@ public class ArDataService {
                .getResultList();
     }
 
-    public DdsRoot getDdsRootByClientId(int clientId){
+    public DdsRoot getDdsRootByClientId(long clientId){
         List<DdsRoot> ddsRoots = em.createQuery("SELECT root FROM DdsRoot root" +
                 " WHERE root.clientId = :clientId", DdsRoot.class)
                 .setParameter("clientId", clientId)

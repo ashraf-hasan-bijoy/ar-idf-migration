@@ -16,11 +16,11 @@ public class DdsRoot {
 
     @Id
     @Column(name = "client_id")
-    private long clientId;
+    private Long clientId;
     @Column(name = "client_ssn")
-    private int clientSsn;
+    private Integer clientSsn;
     @Column(name = "client_medicaid_no")
-    private long clientMedicaidNo;
+    private Long clientMedicaidNo;
     @Column(name = "client_lastname")
     private String clientLastname;
     @Column(name = "client_firstname")
@@ -62,27 +62,27 @@ public class DdsRoot {
     @Column(name = "client_sub_disability_2")
     private String clientSubDisability2;
 
-    public long getClientId() {
+    public Long getClientId() {
         return clientId;
     }
 
-    public void setClientId(long clientId) {
+    public void setClientId(Long clientId) {
         this.clientId = clientId;
     }
 
-    public int getClientSsn() {
+    public Integer getClientSsn() {
         return clientSsn;
     }
 
-    public void setClientSsn(int clientSsn) {
+    public void setClientSsn(Integer clientSsn) {
         this.clientSsn = clientSsn;
     }
 
-    public long getClientMedicaidNo() {
+    public Long getClientMedicaidNo() {
         return clientMedicaidNo;
     }
 
-    public void setClientMedicaidNo(long clientMedicaidNo) {
+    public void setClientMedicaidNo(Long clientMedicaidNo) {
         this.clientMedicaidNo = clientMedicaidNo;
     }
 

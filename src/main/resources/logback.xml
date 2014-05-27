@@ -1,7 +1,7 @@
 <configuration>
 
     <appender name="FILE" class="ch.qos.logback.core.FileAppender">
-        <file>/tmp/iba-migration.log</file>
+        <file>/tmp/idf-migration.log</file>
         <encoder>
             <pattern>%date %level %logger [%file:%line] %msg%n</pattern>
         </encoder>

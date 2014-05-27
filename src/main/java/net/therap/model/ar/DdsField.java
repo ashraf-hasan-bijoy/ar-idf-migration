@@ -15,17 +15,17 @@ import java.util.Date;
 public class DdsField {
     @Id
     @Column(name = "client_id")
-    private int fieldClientId;
+    private Long fieldClientId;
     @Column(name = "field_reason_closed")
     private String fieldReasonClosed;
     @Column(name = "field_caseload_status")
     private String fieldCaseloadStatus;
 
-    public int getFieldClientId() {
+    public Long getFieldClientId() {
         return fieldClientId;
     }
 
-    public void setFieldClientId(int fieldClientId) {
+    public void setFieldClientId(Long fieldClientId) {
         this.fieldClientId = fieldClientId;
     }
 

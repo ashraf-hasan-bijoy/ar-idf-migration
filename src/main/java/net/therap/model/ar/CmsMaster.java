@@ -15,11 +15,11 @@ import java.util.Date;
 public class CmsMaster {
     @Id
     @Column(name = "CMS_ID")
-    private long cmsId;
+    private Long cmsId;
     @Column(name = "CMS_SSN")
-    private int cmsSsn;
+    private Integer cmsSsn;
     @Column(name = "CMS_County_ID")
-    private int cmsCountyId;
+    private Integer cmsCountyId;
     @Column(name = "CMS_Status")
     private String cmsStatus;
     @Column(name = "CMS_Name")
@@ -29,25 +29,25 @@ public class CmsMaster {
     @Column(name = "CMS_Race")
     private String cmsRace;
     @Column(name = "CMS_Sex")
-    private int cmsSex;
+    private Integer cmsSex;
     @Column(name = "CMS_DATE_OF_APPL")
     private Date cmsDateOfAppl;
     @Column(name = "CMS_REAPP_Date")
     private Date cmsReappDate;
     @Column(name = "CMS_COMM_BASED_OFC_AREA")
-    private int cmsCommBasedOfcArea;
+    private Integer cmsCommBasedOfcArea;
     @Column(name = "CMS_MEDICAID_STATUS")
     private String cmsMedicaidStatus;
     @Column(name = "CMS_MEDICAID_NO")
-    private long cmsMedicaidNo;
+    private Long cmsMedicaidNo;
     @Column(name = "CMS_MEDICAID_CATEGORY")
     private String cmsMedicaidCategory;
     @Column(name = "CMS_MEDICAID_PROV_NO")
-    private long cmsMedicaidProvNo;
+    private Long cmsMedicaidProvNo;
     @Column(name = "CMS_PRIMARY_PHYSICIAN")
     private String cmsPrimaryPhysician;
     @Column(name = "CMS_PCP_EXEMPT_DATE")
-    private int cmsPcpExemptDate;
+    private Long cmsPcpExemptDate;
     @Column(name = "CMS_DIAGNOSIS_1")
     private String cmsDiagnosis1;
     @Column(name = "CMS_DIAGNOSIS_2")
@@ -85,7 +85,7 @@ public class CmsMaster {
     @Column(name = "CMS_Elig_END_DATE_6")
     private Date cmsEligEndDate6;
     @Column(name = "CMS_NUMBER_IN_HOUSEHOLD")
-    private int cmsNumberInHousehold;
+    private Integer cmsNumberInHousehold;
     @Column(name = "CMS_MAIL_ADDRESS")
     private String cmsMailAddress;
     @Column(name = "CMS_MAIL_CITY")
@@ -93,9 +93,9 @@ public class CmsMaster {
     @Column(name = "CMS_MAIL_STATE")
     private String cmsMailState;
     @Column(name = "CMS_MAIL_ZIP")
-    private int cmsMailZip;
+    private Integer cmsMailZip;
     @Column(name = "CMS_MAIL_ZIP2")
-    private int cmsMailZip2;
+    private Integer cmsMailZip2;
     @Column(name = "CMS_RES_ADDRESS")
     private String cmsResAddress;
     @Column(name = "CMS_RES_CITY")
@@ -103,34 +103,34 @@ public class CmsMaster {
     @Column(name = "CMS_RES_STATE")
     private String cmsResState;
     @Column(name = "CMS_RES_ZIP")
-    private int cmsResZip;
+    private Integer cmsResZip;
     @Column(name = "CMS_RES_ZIP2")
-    private int cmsResZip2;
+    private Integer cmsResZip2;
     @Column(name = "CMS_3PTYL")
     private String cms3ptyl;
 
 
-    public long getCmsId() {
+    public Long getCmsId() {
         return cmsId;
     }
 
-    public void setCmsId(long cmsId) {
+    public void setCmsId(Long cmsId) {
         this.cmsId = cmsId;
     }
 
-    public int getCmsSsn() {
+    public Integer getCmsSsn() {
         return cmsSsn;
     }
 
-    public void setCmsSsn(int cmsSsn) {
+    public void setCmsSsn(Integer cmsSsn) {
         this.cmsSsn = cmsSsn;
     }
 
-    public int getCmsCountyId() {
+    public Integer getCmsCountyId() {
         return cmsCountyId;
     }
 
-    public void setCmsCountyId(int cmsCountyId) {
+    public void setCmsCountyId(Integer cmsCountyId) {
         this.cmsCountyId = cmsCountyId;
     }
 
@@ -166,11 +166,11 @@ public class CmsMaster {
         this.cmsRace = cmsRace;
     }
 
-    public int getCmsSex() {
+    public Integer getCmsSex() {
         return cmsSex;
     }
 
-    public void setCmsSex(int cmsSex) {
+    public void setCmsSex(Integer cmsSex) {
         this.cmsSex = cmsSex;
     }
 
@@ -190,11 +190,11 @@ public class CmsMaster {
         this.cmsReappDate = cmsReappDate;
     }
 
-    public int getCmsCommBasedOfcArea() {
+    public Integer getCmsCommBasedOfcArea() {
         return cmsCommBasedOfcArea;
     }
 
-    public void setCmsCommBasedOfcArea(int cmsCommBasedOfcArea) {
+    public void setCmsCommBasedOfcArea(Integer cmsCommBasedOfcArea) {
         this.cmsCommBasedOfcArea = cmsCommBasedOfcArea;
     }
 
@@ -206,11 +206,11 @@ public class CmsMaster {
         this.cmsMedicaidStatus = cmsMedicaidStatus;
     }
 
-    public long getCmsMedicaidNo() {
+    public Long getCmsMedicaidNo() {
         return cmsMedicaidNo;
     }
 
-    public void setCmsMedicaidNo(long cmsMedicaidNo) {
+    public void setCmsMedicaidNo(Long cmsMedicaidNo) {
         this.cmsMedicaidNo = cmsMedicaidNo;
     }
 
@@ -222,11 +222,11 @@ public class CmsMaster {
         this.cmsMedicaidCategory = cmsMedicaidCategory;
     }
 
-    public long getCmsMedicaidProvNo() {
+    public Long getCmsMedicaidProvNo() {
         return cmsMedicaidProvNo;
     }
 
-    public void setCmsMedicaidProvNo(long cmsMedicaidProvNo) {
+    public void setCmsMedicaidProvNo(Long cmsMedicaidProvNo) {
         this.cmsMedicaidProvNo = cmsMedicaidProvNo;
     }
 
@@ -238,11 +238,11 @@ public class CmsMaster {
         this.cmsPrimaryPhysician = cmsPrimaryPhysician;
     }
 
-    public int getCmsPcpExemptDate() {
+    public Long getCmsPcpExemptDate() {
         return cmsPcpExemptDate;
     }
 
-    public void setCmsPcpExemptDate(int cmsPcpExemptDate) {
+    public void setCmsPcpExemptDate(Long cmsPcpExemptDate) {
         this.cmsPcpExemptDate = cmsPcpExemptDate;
     }
 
@@ -390,11 +390,11 @@ public class CmsMaster {
         this.cmsEligEndDate6 = cmsEligEndDate6;
     }
 
-    public int getCmsNumberInHousehold() {
+    public Integer getCmsNumberInHousehold() {
         return cmsNumberInHousehold;
     }
 
-    public void setCmsNumberInHousehold(int cmsNumberInHousehold) {
+    public void setCmsNumberInHousehold(Integer cmsNumberInHousehold) {
         this.cmsNumberInHousehold = cmsNumberInHousehold;
     }
 
@@ -422,19 +422,19 @@ public class CmsMaster {
         this.cmsMailState = cmsMailState;
     }
 
-    public int getCmsMailZip() {
+    public Integer getCmsMailZip() {
         return cmsMailZip;
     }
 
-    public void setCmsMailZip(int cmsMailZip) {
+    public void setCmsMailZip(Integer cmsMailZip) {
         this.cmsMailZip = cmsMailZip;
     }
 
-    public int getCmsMailZip2() {
+    public Integer getCmsMailZip2() {
         return cmsMailZip2;
     }
 
-    public void setCmsMailZip2(int cmsMailZip2) {
+    public void setCmsMailZip2(Integer cmsMailZip2) {
         this.cmsMailZip2 = cmsMailZip2;
     }
 
@@ -462,19 +462,19 @@ public class CmsMaster {
         this.cmsResState = cmsResState;
     }
 
-    public int getCmsResZip() {
+    public Integer getCmsResZip() {
         return cmsResZip;
     }
 
-    public void setCmsResZip(int cmsResZip) {
+    public void setCmsResZip(Integer cmsResZip) {
         this.cmsResZip = cmsResZip;
     }
 
-    public int getCmsResZip2() {
+    public Integer getCmsResZip2() {
         return cmsResZip2;
     }
 
-    public void setCmsResZip2(int cmsResZip2) {
+    public void setCmsResZip2(Integer cmsResZip2) {
         this.cmsResZip2 = cmsResZip2;
     }
 

@@ -15,7 +15,7 @@ import java.util.Date;
 public class DdsCmFinance {
     @Id
     @Column(name = "DDS_Id")
-    private Integer ddsId;
+    private Long ddsId;
     @Column(name = "DDCM_MonthlyBills")
     private Long ddcmMonthlybills;
     @Column(name = "DDCM_ApplySobra")
@@ -137,11 +137,11 @@ public class DdsCmFinance {
     @Column(name = "DDCM_PARENT_REFUSAL_DATE")
     private Date ddcmParentRefusalDate;
 
-    public Integer getDdsId() {
+    public Long getDdsId() {
         return ddsId;
     }
 
-    public void setDdsId(Integer ddsId) {
+    public void setDdsId(Long ddsId) {
         this.ddsId = ddsId;
     }
 

@@ -4,7 +4,6 @@ import net.therap.db.entity.common.Client;
 import net.therap.db.entity.common.Provider;
 import net.therap.db.entity.medicalInfo.DiagnosisCode;
 import net.therap.db.entity.medicalInfo.IndividualDiagnosis;
-import net.therap.model.therap.ArClient;
 import net.therap.model.therap.MigrationDataUnit;
 import net.therap.util.CollectionUtils;
 import org.slf4j.Logger;
@@ -30,13 +29,17 @@ public class TherapDataService {
     private EntityManager em;
 
     public void saveTherapIdf(MigrationDataUnit unit) {
-        em.persist(unit.getClientDetail());
         em.persist(unit.getClient());
+        em.persist(unit.getClientDetail());
         em.persist(unit.getArClient());
 
-        for (IndividualDiagnosis diagnosis : unit.getIndividualDiagnosisList()) {
-            em.persist(diagnosis);
+        if (CollectionUtils.isNotEmpty(unit.getIndividualDiagnosisList())) {
+            for (IndividualDiagnosis diagnosis : unit.getIndividualDiagnosisList()) {
+                em.persist(diagnosis);
+            }
         }
+
+        log.debug("Saved : " + unit.getClient().getId() + unit.getClient().getFirstName() + unit.getClient().getProvider().getId());
     }
 
     public DiagnosisCode getIndividualDiagnosis(String code) {
@@ -48,16 +51,16 @@ public class TherapDataService {
         return CollectionUtils.isNotEmpty(diagnosisCodes) ? diagnosisCodes.get(0) : null;
     }
 
-    public Provider getProvider(String code){
+    public Provider getProvider(String code) {
         return em.createQuery("SELECT p FROM Provider p where p.code = :code", Provider.class)
                 .setParameter("code", code)
                 .getSingleResult();
     }
 
-    public String getArClientOversightId(){
+    public String getArClientOversightId() {
 
-        long oversightSeqId = em.createNamedQuery("SELECT ar_oversight_id_seq.nextval FROM DUAL", BigDecimal.class)
-                .getSingleResult()
+        long oversightSeqId = ((BigDecimal) em.createNativeQuery("SELECT ar_oversight_id_seq.nextval FROM DUAL")
+                .getSingleResult())
                 .longValue();
 
         return String.valueOf(oversightSeqId);

@@ -1,7 +1,7 @@
 package net.therap.config;
 
 import net.therap.db.entity.common.Provider;
-import net.therap.site.HostUtils;
+//import net.therap.site.HostUtils;
 import net.therap.util.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -94,7 +94,7 @@ public class FormIdGeneratorBean implements FormIdGenerator {
 
     private String nextSequence() {
         Calendar cal = Calendar.getInstance();
-        String hostName = HostUtils.getHostName();
+        String hostName = "test";
 
         int y = cal.get(Calendar.YEAR) - BASE_YEAR;
         int m = cal.get(Calendar.MONTH) + 1; // In java January is 0

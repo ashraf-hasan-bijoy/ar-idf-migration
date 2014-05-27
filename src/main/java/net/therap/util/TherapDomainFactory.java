@@ -2,6 +2,7 @@ package net.therap.util;
 
 import net.therap.config.FormIdGenerator;
 import net.therap.config.FormIdGeneratorBean;
+import net.therap.db.entity.ar.*;
 import net.therap.db.entity.common.*;
 import net.therap.model.ar.*;
 import net.therap.model.therap.*;
@@ -40,13 +41,13 @@ public class TherapDomainFactory {
         cmsMasterClientRaceMap.put("4", 9999);
         cmsMasterClientRaceMap.put("5", 15);
 
-        ddsRootGenderMap.put("M", "Male");
-        ddsRootGenderMap.put("F", "Female");
+        ddsRootGenderMap.put("M", "M");
+        ddsRootGenderMap.put("F", "F");
 
 //        cmsMasterGenderMap.put(0, );
-        cmsMasterGenderMap.put(1, "Male");
-        cmsMasterGenderMap.put(2, "Female");
-        cmsMasterGenderMap.put(3, "Unknown");
+        cmsMasterGenderMap.put(1, "M");
+        cmsMasterGenderMap.put(2, "F");
+        cmsMasterGenderMap.put(3, "M");
 
 
     }
@@ -54,28 +55,77 @@ public class TherapDomainFactory {
     public static Client createClient(CmsMaster cmsMaster, DdsRoot ddsRoot, Provider provider, String oversightId) {
         Client client = new Client();
         FormIdGenerator formIdGenerator = new FormIdGeneratorBean();
-//        client.setFormId(formIdGenerator.generate());
-        client.setLastName(ddsRoot.getClientLastname());
-        client.setFirstName(ddsRoot.getClientFirstname());
-        client.setMiddleName(ddsRoot.getClientMiddlename());
-        client.setBirthDate(cmsMaster.getCmsDob());
-        client.setGender(String.valueOf(cmsMaster.getCmsSex()));
-        client.setClientAdmissionDate(ddsRoot.getClientDateOfApplication());
-        client.setMedicaidNumber(String.valueOf(cmsMaster.getCmsMedicaidNo()));
-        client.setSsn(String.valueOf(cmsMaster.getCmsSsn()));
+        client.setFormId(formIdGenerator.generate(provider, "CLIENT", true));
+
+        boolean isCmsMasterEmpty = cmsMaster == null;
+        boolean isDdsRootEmpty = ddsRoot == null;
+
+        String cmsLastName = null, ddsLastName = null;
+        String cmsFirstName = null, ddsFirstName = null;
+        String cmsMiddleName = null, ddsMiddleName = null;
+        Date cmsBirth = null, ddsBirth = null;
+        Integer cmsSex = null;
+        String ddsSex = null;
+
+        if (!isCmsMasterEmpty) {
+            client.setMedicaidNumber(String.valueOf(cmsMaster.getCmsMedicaidNo()));
+            client.setSsn(String.valueOf(cmsMaster.getCmsSsn()));
+            client.setBirthDate(cmsMaster.getCmsDob());
+
+            cmsSex = cmsMaster.getCmsSex();
+            cmsBirth = cmsMaster.getCmsDob();
+            String[] names = cmsMaster.getCmsName().split("\\s");
+            cmsLastName = names[0];
+
+            if (names.length == 3) {
+                cmsMiddleName = names[1];
+                cmsFirstName = names[2];
+            } else {
+                cmsFirstName = StringUtils.join(" ", Arrays.copyOfRange(names, 1, names.length));
+            }
+        }
+
+        if (!isDdsRootEmpty) {
+            client.setClientAdmissionDate(ddsRoot.getClientDateOfApplication());
+            ddsFirstName = ddsRoot.getClientFirstname();
+            ddsMiddleName = ddsRoot.getClientMiddlename();
+            ddsLastName = ddsRoot.getClientLastname();
+            ddsBirth = ddsRoot.getClientDateOfBirth();
+            ddsSex = ddsRoot.getClientSex();
+
+        }
+
+        client.setLastName(StringUtils.isEmpty(cmsLastName) ? ddsLastName : cmsLastName);
+        client.setMiddleName(StringUtils.isEmpty(cmsMiddleName) ? ddsMiddleName : cmsMiddleName);
+        client.setFirstName(StringUtils.isEmpty(cmsFirstName) ? ddsFirstName : cmsFirstName);
+        client.setGender(cmsSex == null ? ddsRootGenderMap.get(ddsSex) : cmsMasterGenderMap.get(cmsSex));
+        client.setBirthDate(cmsBirth == null ? ddsBirth : cmsBirth);
+
+        client.setProvider(provider);
         createArClientOversight(client, provider, oversightId);
-        //Remaining fields:
         return client;
     }
 
     public static ClientDetail createClientDetail(CmsMaster cmsMaster, DdsRoot ddsRoot) {
+
         ClientDetail clientDetail = new ClientDetail();
-        clientDetail.setMailingCity(cmsMaster.getCmsMailCity());
-        clientDetail.setMailingState(cmsMaster.getCmsMailState());
-        clientDetail.setMailingZip(String.valueOf(cmsMaster.getCmsMailZip()));
-        clientDetail.setRaCity(cmsMaster.getCmsResCity());
-        clientDetail.setRaState(cmsMaster.getCmsResState());
-        clientDetail.setRaZip(String.valueOf(cmsMaster.getCmsResZip()));
+        boolean isCmsMasterEmpty = cmsMaster == null;
+        boolean isDdsRootEmpty = ddsRoot == null;
+
+        if (!isCmsMasterEmpty) {
+            clientDetail.setMailingCity(cmsMaster.getCmsMailCity());
+            clientDetail.setMailingState(cmsMaster.getCmsMailState());
+            clientDetail.setMailingZip(String.valueOf(cmsMaster.getCmsMailZip()));
+            clientDetail.setRaCity(cmsMaster.getCmsResCity());
+            clientDetail.setRaState(cmsMaster.getCmsResState());
+            clientDetail.setRaZip(String.valueOf(cmsMaster.getCmsResZip()));
+        }
+
+        if (!isDdsRootEmpty) {
+
+        }
+
+
         clientDetail.setRaceList(createRaceList(cmsMaster, ddsRoot));
 
         //Remaining fields : cms mail address, cms res address, cms mail zip 2, cms res zip 2
@@ -83,50 +133,74 @@ public class TherapDomainFactory {
     }
 
     public static ArClient createArClient(CmsMaster cmsMaster, DdsRoot ddsRoot, DdsCmFinance finance,
-                                          List<MedicaidDenial> denials, DdsField field) {
+                                          List<MedicaidDenial> denials, DdsField field, Provider provider) {
         ArClient arClient = new ArClient();
-//        arClient.setFormId();
-        arClient.setDdsCaseloadStatus(field.getFieldCaseloadStatus());
-        arClient.setDdsCaseloadCloseReason(field.getFieldReasonClosed());
-        arClient.setCountyCode(ddsRoot.getClientCounty());
-        arClient.setDiplomaDate(ddsRoot.getClientDateOfDiploma());
-        arClient.setPrimaryDisability(ddsRoot.getClientPrimary());
-        arClient.setSecondaryDisability(ddsRoot.getClientSecondary());
-        arClient.setAdaptiveBehaviorIndicator(ddsRoot.getClientAdapt());
-        arClient.setPrimaryHomeLanguage(ddsRoot.getClientLanguage());
-        arClient.setNumberInHousehold(ddsRoot.getClientHouse());
-        arClient.setMonthlyMedicalBill(Double.valueOf(finance.getDdcmMonthlybills()));
-        arClient.setSsnDenialLetterDate(finance.getDdcmDenyDisSsi());
-        arClient.setMedicaidDenialLetterDate(finance.getDdcmDenyResMedicaid());
-        arClient.setReceivingSobra(Boolean.valueOf(finance.getDdcmApplysobra()));
-        arClient.setReceivingMedicaid(Boolean.valueOf(finance.getDdcmApplymedicaid()));
-        arClient.setReceivingSsi(Boolean.valueOf(finance.getDdcmApplyssi()));
-        arClient.setMedicallyNeedy(Boolean.valueOf(finance.getDdcmApplyneedy()));
-//        arClient.setMedicaidTypeArkids(ddsRoot.getClientMedicaidType());
-        arClient.setResources5WeekSpinDown(finance.getDdcmDenyRes5week());
-        arClient.setDisabilitySsi(finance.getDdcmDenyDisSsi());
-        arClient.setDisabilityMedicaidDenialDate(finance.getDdcmDenyDisMedicaid());
-        arClient.setSobraAppliedDate(finance.getDdcmSobraDate());
-        arClient.setNeedyDeterminationDate(finance.getDdcmNeedyDate());
-        arClient.setMedicaidDeterminationDate(finance.getDdcmMedicaidDate());
-        arClient.setSsiDeterminationDate(finance.getDdcmSsiDate());
-        arClient.setParentsRefusalDate(finance.getDdcmParentRefusalDate());
-        arClient.setDdsId(ddsRoot.getClientId());
-        arClient.setCmsId(cmsMaster.getCmsId());
-        arClient.setCmsStatusCode(cmsMaster.getCmsStatus());
-        arClient.setCmsApplyDate(cmsMaster.getCmsDateOfAppl());
-        arClient.setCmsReapplyDate(cmsMaster.getCmsReappDate());
-        arClient.setCmsCommOfficeAreaCode(String.valueOf(cmsMaster.getCmsCommBasedOfcArea()));
-        arClient.setCmsMedicaidStatus(cmsMaster.getCmsMedicaidStatus());
-        arClient.setCmsMedicaidCategory(cmsMaster.getCmsMedicaidCategory());
-        arClient.setCmsMedicaidProviderNo(cmsMaster.getCmsMedicaidProvNo());
-        arClient.setCmsPrimaryPhysician(cmsMaster.getCmsPrimaryPhysician());
-        arClient.setThirdPartyLiability(cmsMaster.getCms3ptyl());
+
+        boolean isCmsMasterEmpty = cmsMaster == null;
+        boolean isDdsRootEmpty = ddsRoot == null;
+        boolean isFinanceEmpty = finance == null;
+        boolean isFieldEmpty = field == null;
+
+        if (!isCmsMasterEmpty) {
+            arClient.setCmsId(cmsMaster.getCmsId());
+            arClient.setCmsStatusCode(ArCmsStatus.valueOf(cmsMaster.getCmsStatus()));
+            arClient.setCmsApplyDate(cmsMaster.getCmsDateOfAppl());
+            arClient.setCmsReapplyDate(cmsMaster.getCmsReappDate());
+            arClient.setCmsCommOfficeAreaCode(cmsMaster.getCmsCommBasedOfcArea() == null ? null : String.valueOf(cmsMaster.getCmsCommBasedOfcArea()));
+            arClient.setCmsMedicaidStatus(cmsMaster.getCmsMedicaidStatus());
+            arClient.setCmsMedicaidCategory(cmsMaster.getCmsMedicaidCategory());
+            arClient.setCmsMedicaidProviderNo(cmsMaster.getCmsMedicaidProvNo());
+            arClient.setCmsPrimaryPhysician(cmsMaster.getCmsPrimaryPhysician());
+            arClient.setThirdPartyLiability(cmsMaster.getCms3ptyl());
+        }
+
+        if (!isDdsRootEmpty) {
+            arClient.setCountyCode(ArCounty.valueOf(ddsRoot.getClientCounty()));
+            arClient.setDiplomaDate(ddsRoot.getClientDateOfDiploma());
+            arClient.setPrimaryDisability(ddsRoot.getClientPrimary());
+            arClient.setSecondaryDisability(ddsRoot.getClientSecondary());
+            arClient.setAdaptiveBehaviorIndicator(ddsRoot.getClientAdapt());
+            arClient.setPrimaryHomeLanguage(ddsRoot.getClientLanguage());
+            arClient.setNumberInHousehold(ddsRoot.getClientHouse());
+            arClient.setDdsId(ddsRoot.getClientId());
+        }
+
+        if (!isFieldEmpty) {
+            arClient.setDdsCaseloadStatus(ArCaseloadStatus.valueOf(field.getFieldCaseloadStatus()));
+            arClient.setDdsCaseloadCloseReason(ArReasonClosed.valueOf(field.getFieldReasonClosed()));
+        }
+
+        if (!isFinanceEmpty) {
+            arClient.setMonthlyMedicalBill(Double.valueOf(finance.getDdcmMonthlybills()));
+            arClient.setSsnDenialLetterDate(finance.getDdcmDenyDisSsi());
+            arClient.setMedicaidDenialLetterDate(finance.getDdcmDenyResMedicaid());
+            arClient.setReceivingSobra(Boolean.valueOf(finance.getDdcmApplysobra()));
+            arClient.setReceivingMedicaid(Boolean.valueOf(finance.getDdcmApplymedicaid()));
+            arClient.setReceivingSsi(Boolean.valueOf(finance.getDdcmApplyssi()));
+            arClient.setMedicallyNeedy(Boolean.valueOf(finance.getDdcmApplyneedy()));
+            //arClient.setMedicaidTypeArkids(ddsRoot.getClientMedicaidType());
+            arClient.setResources5WeekSpinDown(finance.getDdcmDenyRes5week());
+            arClient.setDisabilitySsi(finance.getDdcmDenyDisSsi());
+            arClient.setDisabilityMedicaidDenialDate(finance.getDdcmDenyDisMedicaid());
+            arClient.setSobraAppliedDate(finance.getDdcmSobraDate());
+            arClient.setNeedyDeterminationDate(finance.getDdcmNeedyDate());
+            arClient.setMedicaidDeterminationDate(finance.getDdcmMedicaidDate());
+            arClient.setSsiDeterminationDate(finance.getDdcmSsiDate());
+            arClient.setParentsRefusalDate(finance.getDdcmParentRefusalDate());
+        }
+
+        FormIdGenerator formIdGenerator = new FormIdGeneratorBean();
+        arClient.setFormId(formIdGenerator.generate(provider, "ARIDFE", true));
+
         arClient.setMedicaidDenials(createMedicaidDenialList(denials));
-        return null;
+        arClient.setProvider(provider);
+        return arClient;
     }
 
     public static List<ArClientFamilyMember> createArClientFamilyMembers(DdsCmFinance finance) {
+        if (finance == null) {
+            return null;
+        }
         List<ArClientFamilyMember> arClientFamilyMembers = new ArrayList<ArClientFamilyMember>();
 
         ArClientFamilyMember arClientFamilyMember = new ArClientFamilyMember();
@@ -253,8 +327,13 @@ public class TherapDomainFactory {
     }
 
     public static List<ArClientMedicaidDenial> createMedicaidDenialList(List<MedicaidDenial> medicaidDenials) {
+
+        if (CollectionUtils.isEmpty(medicaidDenials)) {
+            return null;
+        }
+
         List<ArClientMedicaidDenial> arClientMedicaidDenials = new ArrayList<ArClientMedicaidDenial>();
-        for(MedicaidDenial medicaidDenial : medicaidDenials) {
+        for (MedicaidDenial medicaidDenial : medicaidDenials) {
             ArClientMedicaidDenial arClientMedicaidDenial = new ArClientMedicaidDenial();
             arClientMedicaidDenial.setMedicaidDenialBeginDate(medicaidDenial.getMedicaidDenialStartDate());
             arClientMedicaidDenial.setMedicaidDenialEndDate(medicaidDenial.getMedicaidDenialEndDate());
@@ -268,16 +347,16 @@ public class TherapDomainFactory {
     public static List<Race> createRaceList(CmsMaster master, DdsRoot ddsRoot) {
         List<Race> raceList = new ArrayList<Race>();
         Race race = new Race();
-        if (master.getCmsRace() != null) {
+        if (master != null && master.getCmsRace() != null) {
             race.setCode(Integer.parseInt(master.getCmsRace()));
-        } else if (ddsRoot.getClientRace() != null) {
+        } else if (ddsRoot != null && ddsRoot.getClientRace() != null) {
             race.setCode(Integer.parseInt(ddsRoot.getClientRace()));
         }
         raceList.add(race);
         return raceList;
     }
 
-    public static Oversight createArClientOversight(Client client, Provider provider, String assignedId){
+    public static Oversight createArClientOversight(Client client, Provider provider, String assignedId) {
 
         Oversight oversight = new Oversight();
 
@@ -292,4 +371,4 @@ public class TherapDomainFactory {
     }
 
 
-    }
+}

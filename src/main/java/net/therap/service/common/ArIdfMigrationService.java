@@ -1,11 +1,11 @@
 package net.therap.service.common;
 
+import net.therap.db.entity.ar.ArClient;
 import net.therap.db.entity.common.Client;
 import net.therap.db.entity.common.ClientDetail;
 import net.therap.db.entity.common.Provider;
 import net.therap.db.entity.medicalInfo.DiagnosisCode;
 import net.therap.db.entity.medicalInfo.IndividualDiagnosis;
-import net.therap.model.therap.ArClient;
 import net.therap.model.therap.MigrationDataUnit;
 import net.therap.service.ar.ArDataService;
 import net.therap.service.therap.TherapDataService;
@@ -52,7 +52,7 @@ public class ArIdfMigrationService {
 
             if (CollectionUtils.isNotEmpty(cmsMasters)) {
                 for (CmsMaster master : cmsMasters) {
-                    int clientId = master.getCmsPcpExemptDate();
+                    long clientId = master.getCmsPcpExemptDate();
                     DdsRoot ddsRoot = arDataService.getDdsRootByClientId(clientId);
 
                     migrateToTherapIdf(master, ddsRoot, clientId);
@@ -96,7 +96,7 @@ public class ArIdfMigrationService {
 
         Client client = TherapDomainFactory.createClient(master, ddsRoot, provider, therapDataService.getArClientOversightId());
         ClientDetail clientDetail = TherapDomainFactory.createClientDetail(master, ddsRoot);
-        ArClient arClient = TherapDomainFactory.createArClient(master, ddsRoot, finance, denials, field);
+        ArClient arClient = TherapDomainFactory.createArClient(master, ddsRoot, finance, denials, field, provider);
         List<IndividualDiagnosis> individualDiagnoses = getIndividualDiagnosisList(master);
 
         therapDataService.saveTherapIdf(new MigrationDataUnit(client, clientDetail, arClient, individualDiagnoses));
@@ -104,6 +104,9 @@ public class ArIdfMigrationService {
 
     public List<IndividualDiagnosis> getIndividualDiagnosisList(CmsMaster master) {
 
+        if (master == null) {
+            return null;
+        }
         List<IndividualDiagnosis> individualDiagnoses = new ArrayList<IndividualDiagnosis>();
         List<String> diagnosisCodeList = Arrays.asList(master.getCmsDiagnosis1(), master.getCmsDiagnosis2(),
                 master.getCmsDiagnosis3(), master.getCmsDiagnosis4(), master.getCmsDiagnosis5(),
@@ -131,7 +134,7 @@ public class ArIdfMigrationService {
     private String formatDiagnosisCode(String code) {
 
         code = code.replaceAll("\\W+", "");
-        int indexOfDot = code.startsWith("E") ? 3 : 4;
+        int indexOfDot = code.startsWith("E") ? 4 : 3;
 
         if (code.length() > indexOfDot) {
             code = new StringBuffer(code).insert(indexOfDot, ".").toString();

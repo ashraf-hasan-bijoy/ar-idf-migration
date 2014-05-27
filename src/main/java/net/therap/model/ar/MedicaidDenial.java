@@ -15,7 +15,7 @@ import java.util.Date;
 public class MedicaidDenial {
     @Id
     @Column(name = "client_id")
-    private int clientId;
+    private Long clientId;
     @Column(name = "medicaid_denial_start_date")
     private Date medicaidDenialStartDate;
     @Column(name = "medicaid_denial_end_date")
@@ -23,11 +23,11 @@ public class MedicaidDenial {
     @Column(name = "medicaid_denial_option_delete")
     private String medicaidDenialOptionDelete;
 
-    public int getClientId() {
+    public Long getClientId() {
         return clientId;
     }
 
-    public void setClientId(int clientId) {
+    public void setClientId(Long clientId) {
         this.clientId = clientId;
     }
 
