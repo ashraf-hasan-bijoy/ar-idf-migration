@@ -15,10 +15,10 @@ import java.util.*;
  */
 public class TherapDomainFactory {
 
-    public static Map<String, Integer> cmsMasterClientRaceMap = new HashMap<String, Integer>();
-    public static Map<String, Integer> ddsRootClientRaceMap = new HashMap<String, Integer>();
-    public static Map<Integer, String> cmsMasterGenderMap = new HashMap<Integer, String>();
-    public static Map<String, String> ddsRootGenderMap = new HashMap<String, String>();
+    private static Map<String, Integer> cmsMasterClientRaceMap = new HashMap<String, Integer>();
+    private static Map<String, Integer> ddsRootClientRaceMap = new HashMap<String, Integer>();
+    private static Map<Integer, String> cmsMasterGenderMap = new HashMap<Integer, String>();
+    private static Map<String, String> ddsRootGenderMap = new HashMap<String, String>();
 
 
     static {
@@ -55,63 +55,60 @@ public class TherapDomainFactory {
     public static Client createClient(CmsMaster cmsMaster, DdsRoot ddsRoot, Provider provider, String oversightId) {
         Client client = new Client();
         FormIdGenerator formIdGenerator = new FormIdGeneratorBean();
-        client.setFormId(formIdGenerator.generate(provider, "CLIENT", false));
+        client.setFormId(formIdGenerator.generate(provider, CommonForm.FT_CLIENT, false));
 
-        boolean isCmsMasterEmpty = cmsMaster == null;
-        boolean isDdsRootEmpty = ddsRoot == null;
-
-        String cmsLastName = null, ddsLastName = null;
-        String cmsFirstName = null, ddsFirstName = null;
-        String cmsMiddleName = null, ddsMiddleName = null;
-        Date cmsBirth = null, ddsBirth = null;
-        Integer cmsSex = null;
-        String ddsSex = null;
-
-        if (!isCmsMasterEmpty) {
-            client.setMedicaidNumber(cmsMaster.getCmsMedicaidNo() == null ? null : String.valueOf(cmsMaster.getCmsMedicaidNo()));
-            client.setSsn(cmsMaster.getCmsSsn() == null ? null : String.valueOf(cmsMaster.getCmsSsn()));
-            client.setBirthDate(cmsMaster.getCmsDob());
-
-            cmsSex = cmsMaster.getCmsSex();
-            cmsBirth = cmsMaster.getCmsDob();
-            String[] names = cmsMaster.getCmsName().split("\\s");
-            cmsLastName = names[0];
-
-            if (names.length == 3) {
-                cmsMiddleName = names[1];
-                cmsFirstName = names[2];
-            } else if(names.length > 1) {
-                cmsFirstName = StringUtils.join(" ", Arrays.copyOfRange(names, 1, names.length));
-            }
-        }
-
-        if (!isDdsRootEmpty) {
+        if (ddsRoot != null) {
             client.setClientAdmissionDate(ddsRoot.getClientDateOfApplication());
-            ddsFirstName = ddsRoot.getClientFirstname();
-            ddsMiddleName = ddsRoot.getClientMiddlename();
-            ddsLastName = ddsRoot.getClientLastname();
-            ddsBirth = ddsRoot.getClientDateOfBirth();
-            ddsSex = ddsRoot.getClientSex();
 
+            client.setMedicaidNumber(ddsRoot.getClientMedicaidNo() != null ? String.valueOf(ddsRoot.getClientMedicaidNo()) : null);
+            client.setSsn(ddsRoot.getClientSsn() != null ? String.valueOf(ddsRoot.getClientSsn()) : null);
+            client.setBirthDate(ddsRoot.getClientDateOfBirth());
+            client.setGender(ddsRootGenderMap.get(ddsRoot.getClientSex()));
+
+            setClientNameByDdsRoot(client, ddsRoot);
         }
 
-        client.setLastName(StringUtils.isEmpty(cmsLastName) ? ddsLastName : cmsLastName);
-        client.setMiddleName(StringUtils.isEmpty(cmsMiddleName) ? ddsMiddleName : cmsMiddleName);
-        client.setFirstName(StringUtils.isEmpty(cmsFirstName) ? ddsFirstName : cmsFirstName);
-        client.setGender(cmsSex == null ? ddsRootGenderMap.get(ddsSex) : cmsMasterGenderMap.get(cmsSex));
-        client.setBirthDate(cmsBirth == null ? ddsBirth : cmsBirth);
+        if (cmsMaster != null) {
+
+            client.setMedicaidNumber(cmsMaster.getCmsMedicaidNo() != null ? String.valueOf(cmsMaster.getCmsMedicaidNo())
+                    : client.getMedicaidNumber());
+            client.setSsn(cmsMaster.getCmsSsn() != null ? String.valueOf(cmsMaster.getCmsSsn()) : client.getSsn());
+            client.setBirthDate(cmsMaster.getCmsDob() != null ? cmsMaster.getCmsDob() : client.getBirthDate());
+            client.setGender(cmsMaster.getCmsSex() != null ? cmsMasterGenderMap.get(cmsMaster.getCmsSex()) : client.getGender());
+            setClientNameByCmsMaster(client, cmsMaster);
+        }
+
 
         client.setProvider(provider);
         createArClientOversight(client, provider, oversightId);
         return client;
     }
 
+    public static void setClientNameByCmsMaster(Client client, CmsMaster master) {
+        String[] names = master.getCmsName().split("\\s");
+        client.setLastName(names[0]);
+
+        if (names.length == 3) {
+            client.setMiddleName(names[1]);
+            client.setFirstName(names[2]);
+        } else if (names.length > 1) {
+            client.setFirstName(StringUtils.join(" ", Arrays.copyOfRange(names, 1, names.length)));
+            client.setMiddleName(null);
+        }
+    }
+
+    public static void setClientNameByDdsRoot(Client client, DdsRoot ddsRoot) {
+        client.setFirstName(ddsRoot.getClientFirstname());
+        client.setMiddleName(ddsRoot.getClientMiddlename());
+        client.setLastName(ddsRoot.getClientLastname());
+    }
+
+
     public static ClientDetail createClientDetail(CmsMaster cmsMaster, DdsRoot ddsRoot) {
 
         ClientDetail clientDetail = new ClientDetail();
-        boolean isCmsMasterEmpty = cmsMaster == null;
 
-        if (!isCmsMasterEmpty) {
+        if (cmsMaster != null) {
             //clientDetail.setMailingStreet1(cmsMaster.getCmsMailAddress());
             //clientDetail.setMailingStreet2(cmsMaster.getCmsMailAddress());
             clientDetail.setMailingCity(cmsMaster.getCmsMailCity());
@@ -127,7 +124,7 @@ public class TherapDomainFactory {
 
         clientDetail.setRaceList(createRaceList(cmsMaster, ddsRoot));
 
-        //Remaining fields : cms mail address, cms res address, cms mail zip 2, cms res zip 2
+        //Remaining fields : cms mail address, cms res address
         return clientDetail;
     }
 
@@ -135,25 +132,7 @@ public class TherapDomainFactory {
                                           List<MedicaidDenial> denials, DdsField field, Provider provider) {
         ArClient arClient = new ArClient();
 
-        boolean isCmsMasterEmpty = cmsMaster == null;
-        boolean isDdsRootEmpty = ddsRoot == null;
-        boolean isFinanceEmpty = finance == null;
-        boolean isFieldEmpty = field == null;
-
-        if (!isCmsMasterEmpty) {
-            arClient.setCmsId(cmsMaster.getCmsId());
-            arClient.setCmsStatusCode(StringUtils.isEmpty(cmsMaster.getCmsStatus()) ? null : ArCmsStatus.valueOf(cmsMaster.getCmsStatus()));
-            arClient.setCmsApplyDate(cmsMaster.getCmsDateOfAppl());
-            arClient.setCmsReapplyDate(cmsMaster.getCmsReappDate());
-            arClient.setCmsCommOfficeAreaCode(cmsMaster.getCmsCommBasedOfcArea() == null ? null : String.valueOf(cmsMaster.getCmsCommBasedOfcArea()));
-            arClient.setCmsMedicaidStatus(cmsMaster.getCmsMedicaidStatus());
-            arClient.setCmsMedicaidCategory(cmsMaster.getCmsMedicaidCategory());
-            arClient.setCmsMedicaidProviderNo(cmsMaster.getCmsMedicaidProvNo());
-            arClient.setCmsPrimaryPhysician(cmsMaster.getCmsPrimaryPhysician());
-            arClient.setThirdPartyLiability(cmsMaster.getCms3ptyl());
-        }
-
-        if (!isDdsRootEmpty) {
+        if (ddsRoot != null) {
             arClient.setCountyCode(StringUtils.isEmpty(ddsRoot.getClientCounty()) ? null : ArCounty.valueOf(ddsRoot.getClientCounty()));
             arClient.setDiplomaDate(ddsRoot.getClientDateOfDiploma());
             arClient.setPrimaryDisability(ddsRoot.getClientPrimary());
@@ -164,12 +143,26 @@ public class TherapDomainFactory {
             arClient.setDdsId(ddsRoot.getClientId());
         }
 
-        if (!isFieldEmpty) {
+        if (cmsMaster != null) {
+            arClient.setCmsId(cmsMaster.getCmsId());
+            arClient.setCmsStatusCode(StringUtils.isEmpty(cmsMaster.getCmsStatus()) ? null : ArCmsStatus.valueOf(cmsMaster.getCmsStatus()));
+            arClient.setCmsApplyDate(cmsMaster.getCmsDateOfAppl());
+            arClient.setCmsReapplyDate(cmsMaster.getCmsReappDate());
+            arClient.setCmsCommOfficeAreaCode(cmsMaster.getCmsCommBasedOfcArea() == null ? null : String.valueOf(cmsMaster.getCmsCommBasedOfcArea()));
+            arClient.setCmsMedicaidStatus(cmsMaster.getCmsMedicaidStatus());
+            arClient.setCmsMedicaidCategory(cmsMaster.getCmsMedicaidCategory());
+            arClient.setCmsMedicaidProviderNo(cmsMaster.getCmsMedicaidProvNo());
+            arClient.setCmsPrimaryPhysician(cmsMaster.getCmsPrimaryPhysician());
+            arClient.setThirdPartyLiability(cmsMaster.getCms3ptyl());
+            arClient.setNumberInHousehold(cmsMaster.getCmsNumberInHousehold() == null ? null : String.valueOf(cmsMaster.getCmsNumberInHousehold()));
+        }
+
+        if (field != null) {
             arClient.setDdsCaseloadStatus(StringUtils.isEmpty(field.getFieldCaseloadStatus()) ? null : ArCaseloadStatus.valueOf(field.getFieldCaseloadStatus()));
             arClient.setDdsCaseloadCloseReason(StringUtils.isEmpty(field.getFieldReasonClosed()) ? null : ArReasonClosed.valueOf(field.getFieldReasonClosed()));
         }
 
-        if (!isFinanceEmpty) {
+        if (finance != null) {
             arClient.setMonthlyMedicalBill(finance.getDdcmMonthlybills() == null ? null : Double.valueOf(finance.getDdcmMonthlybills()));
             arClient.setSsnDenialLetterDate(finance.getDdcmDenyDisSsi());
             arClient.setMedicaidDenialLetterDate(finance.getDdcmDenyResMedicaid());
@@ -192,9 +185,9 @@ public class TherapDomainFactory {
         arClient.setFormId(formIdGenerator.generate(provider, CommonForm.FT_AR_IDF_EXT, false));
 
         arClient.setMedicaidDenials(createMedicaidDenialList(denials));
-        arClient.setProvider(provider);
         arClient.setFamilyMembers(createArClientFamilyMembers(finance));
         arClient.setEligibilityDurations(createArEligibilityDurations(cmsMaster));
+        arClient.setProvider(provider);
         return arClient;
     }
 
@@ -208,7 +201,7 @@ public class TherapDomainFactory {
         arClientFamilyMember.setName(finance.getDdcmCmfName());
         arClientFamilyMember.setAge(StringUtils.isEmpty(finance.getDdcmCmfAge()) ? null : Integer.valueOf(finance.getDdcmCmfAge()));
         arClientFamilyMember.setMonthlyIncome(finance.getDdcmCmfIncome());
-        arClientFamilyMember.setRelationship(finance.getDdcmCmfRelation() != null ? null : String.valueOf(finance.getDdcmCmfRelation()));
+        arClientFamilyMember.setRelationship(finance.getDdcmCmfRelation() == null ? null : String.valueOf(finance.getDdcmCmfRelation()));
         arClientFamilyMember.setSourceOfIncome(finance.getDdcmCmfSource());
 
         arClientFamilyMembers.add(arClientFamilyMember);
@@ -217,7 +210,8 @@ public class TherapDomainFactory {
         arClientFamilyMember1.setName(finance.getDdcmCmfName1());
         arClientFamilyMember1.setAge(StringUtils.isEmpty(finance.getDdcmCmfAge1()) ? null : Integer.valueOf(finance.getDdcmCmfAge1()));
         arClientFamilyMember1.setMonthlyIncome(finance.getDdcmCmfIncome1());
-        arClientFamilyMember1.setRelationship(finance.getDdcmCmfRelation1() != null ? null : String.valueOf(finance.getDdcmCmfRelation1()));
+        arClientFamilyMember1.setRelationship(finance.getDdcmCmfRelation1() == null ? null : String.valueOf(finance.getDdcmCmfRelation1()));
+        arClientFamilyMember.setSourceOfIncome(finance.getDdcmCmfSource1());
 
         arClientFamilyMembers.add(arClientFamilyMember1);
 
@@ -225,7 +219,8 @@ public class TherapDomainFactory {
         arClientFamilyMember2.setName(finance.getDdcmCmfName2());
         arClientFamilyMember2.setAge(StringUtils.isEmpty(finance.getDdcmCmfAge2()) ? null : Integer.valueOf(finance.getDdcmCmfAge2()));
         arClientFamilyMember2.setMonthlyIncome(finance.getDdcmCmfIncome2());
-        arClientFamilyMember2.setRelationship(finance.getDdcmCmfRelation2() != null ? null : String.valueOf(finance.getDdcmCmfRelation2()));
+        arClientFamilyMember2.setRelationship(finance.getDdcmCmfRelation2() == null ? null : String.valueOf(finance.getDdcmCmfRelation2()));
+        arClientFamilyMember.setSourceOfIncome(finance.getDdcmCmfSource2());
 
         arClientFamilyMembers.add(arClientFamilyMember2);
 
@@ -233,7 +228,8 @@ public class TherapDomainFactory {
         arClientFamilyMember3.setName(finance.getDdcmCmfName3());
         arClientFamilyMember3.setAge(StringUtils.isEmpty(finance.getDdcmCmfAge3()) ? null : Integer.valueOf(finance.getDdcmCmfAge3()));
         arClientFamilyMember3.setMonthlyIncome(finance.getDdcmCmfIncome3());
-        arClientFamilyMember3.setRelationship(finance.getDdcmCmfRelation3() != null ? null : String.valueOf(finance.getDdcmCmfRelation3()));
+        arClientFamilyMember3.setRelationship(finance.getDdcmCmfRelation3() == null ? null : String.valueOf(finance.getDdcmCmfRelation3()));
+        arClientFamilyMember.setSourceOfIncome(finance.getDdcmCmfSource3());
 
         arClientFamilyMembers.add(arClientFamilyMember3);
 
@@ -241,7 +237,8 @@ public class TherapDomainFactory {
         arClientFamilyMember4.setName(finance.getDdcmCmfName4());
         arClientFamilyMember4.setAge(StringUtils.isEmpty(finance.getDdcmCmfAge4()) ? null : Integer.valueOf(finance.getDdcmCmfAge4()));
         arClientFamilyMember4.setMonthlyIncome(finance.getDdcmCmfIncome4());
-        arClientFamilyMember4.setRelationship(finance.getDdcmCmfRelation4() != null ? null : String.valueOf(finance.getDdcmCmfRelation4()));
+        arClientFamilyMember4.setRelationship(finance.getDdcmCmfRelation4() == null ? null : String.valueOf(finance.getDdcmCmfRelation4()));
+        arClientFamilyMember.setSourceOfIncome(finance.getDdcmCmfSource4());
 
         arClientFamilyMembers.add(arClientFamilyMember4);
 
@@ -249,31 +246,35 @@ public class TherapDomainFactory {
         arClientFamilyMember5.setName(finance.getDdcmCmfName5());
         arClientFamilyMember5.setAge(StringUtils.isEmpty(finance.getDdcmCmfAge5()) ? null : Integer.valueOf(finance.getDdcmCmfAge5()));
         arClientFamilyMember5.setMonthlyIncome(finance.getDdcmCmfIncome5());
-        arClientFamilyMember5.setRelationship(finance.getDdcmCmfRelation5() != null ? null : String.valueOf(finance.getDdcmCmfRelation5()));
+        arClientFamilyMember5.setRelationship(finance.getDdcmCmfRelation5() == null ? null : String.valueOf(finance.getDdcmCmfRelation5()));
+        arClientFamilyMember.setSourceOfIncome(finance.getDdcmCmfSource5());
 
         arClientFamilyMembers.add(arClientFamilyMember5);
 
         ArClientFamilyMember arClientFamilyMember6 = new ArClientFamilyMember();
         arClientFamilyMember6.setName(finance.getDdcmCmfName6());
-        arClientFamilyMember6.setAge(StringUtils.isEmpty(finance.getDdcmCmfAge()) ? null : Integer.valueOf(finance.getDdcmCmfAge6()));
+        arClientFamilyMember6.setAge(StringUtils.isEmpty(finance.getDdcmCmfAge6()) ? null : Integer.valueOf(finance.getDdcmCmfAge6()));
         arClientFamilyMember6.setMonthlyIncome(finance.getDdcmCmfIncome6());
-        arClientFamilyMember6.setRelationship(finance.getDdcmCmfRelation6() != null ? null : String.valueOf(finance.getDdcmCmfRelation6()));
+        arClientFamilyMember6.setRelationship(finance.getDdcmCmfRelation6() == null ? null : String.valueOf(finance.getDdcmCmfRelation6()));
+        arClientFamilyMember.setSourceOfIncome(finance.getDdcmCmfSource6());
 
         arClientFamilyMembers.add(arClientFamilyMember6);
 
         ArClientFamilyMember arClientFamilyMember7 = new ArClientFamilyMember();
         arClientFamilyMember7.setName(finance.getDdcmCmfName7());
-        arClientFamilyMember7.setAge(StringUtils.isEmpty(finance.getDdcmCmfAge()) ? null : Integer.valueOf(finance.getDdcmCmfAge7()));
+        arClientFamilyMember7.setAge(StringUtils.isEmpty(finance.getDdcmCmfAge7()) ? null : Integer.valueOf(finance.getDdcmCmfAge7()));
         arClientFamilyMember7.setMonthlyIncome(finance.getDdcmCmfIncome7());
-        arClientFamilyMember7.setRelationship(finance.getDdcmCmfRelation7() != null ? null : String.valueOf(finance.getDdcmCmfRelation7()));
+        arClientFamilyMember7.setRelationship(finance.getDdcmCmfRelation7() == null ? null : String.valueOf(finance.getDdcmCmfRelation7()));
+        arClientFamilyMember.setSourceOfIncome(finance.getDdcmCmfSource7());
 
         arClientFamilyMembers.add(arClientFamilyMember7);
 
         ArClientFamilyMember arClientFamilyMember8 = new ArClientFamilyMember();
         arClientFamilyMember8.setName(finance.getDdcmCmfName8());
-        arClientFamilyMember8.setAge(StringUtils.isEmpty(finance.getDdcmCmfAge()) ? null : Integer.valueOf(finance.getDdcmCmfAge8()));
+        arClientFamilyMember8.setAge(StringUtils.isEmpty(finance.getDdcmCmfAge8()) ? null : Integer.valueOf(finance.getDdcmCmfAge8()));
         arClientFamilyMember8.setMonthlyIncome(finance.getDdcmCmfIncome8());
-        arClientFamilyMember8.setRelationship(finance.getDdcmCmfRelation8() != null ? null : String.valueOf(finance.getDdcmCmfRelation8()));
+        arClientFamilyMember8.setRelationship(finance.getDdcmCmfRelation8() == null ? null : String.valueOf(finance.getDdcmCmfRelation8()));
+        arClientFamilyMember.setSourceOfIncome(finance.getDdcmCmfSource8());
 
         arClientFamilyMembers.add(arClientFamilyMember8);
         return arClientFamilyMembers;
@@ -286,15 +287,9 @@ public class TherapDomainFactory {
 
         List<ArEligibilityDuration> arEligibilityDurations = new ArrayList<ArEligibilityDuration>();
 
-        ArEligibilityDuration arEligibilityDuration = new ArEligibilityDuration();
-        arEligibilityDuration.setBeginDate(master.getCmsEligBegDate1());
-        arEligibilityDuration.setEndDate(master.getCmsEligEndDate1());
-
-        arEligibilityDurations.add(arEligibilityDuration);
-
         ArEligibilityDuration arEligibilityDuration1 = new ArEligibilityDuration();
-        arEligibilityDuration1.setBeginDate(master.getCmsEligBegDate2());
-        arEligibilityDuration1.setEndDate(master.getCmsEligEndDate2());
+        arEligibilityDuration1.setBeginDate(master.getCmsEligBegDate1());
+        arEligibilityDuration1.setEndDate(master.getCmsEligEndDate1());
 
         arEligibilityDurations.add(arEligibilityDuration1);
 
