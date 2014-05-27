@@ -89,8 +89,8 @@ public class TherapDomainFactory {
         client.setLastName(names[0]);
 
         if (names.length == 3) {
-            client.setMiddleName(names[1]);
-            client.setFirstName(names[2]);
+            client.setFirstName(names[1]);
+            client.setMiddleName(names[2]);
         } else if (names.length > 1) {
             client.setFirstName(StringUtils.join(" ", Arrays.copyOfRange(names, 1, names.length)));
             client.setMiddleName(null);
@@ -154,7 +154,7 @@ public class TherapDomainFactory {
             arClient.setCmsMedicaidProviderNo(cmsMaster.getCmsMedicaidProvNo());
             arClient.setCmsPrimaryPhysician(cmsMaster.getCmsPrimaryPhysician());
             arClient.setThirdPartyLiability(cmsMaster.getCms3ptyl());
-            arClient.setNumberInHousehold(cmsMaster.getCmsNumberInHousehold() == null ? null : String.valueOf(cmsMaster.getCmsNumberInHousehold()));
+            arClient.setNumberInHousehold(cmsMaster.getCmsNumberInHousehold() == null ? arClient.getNumberInHousehold() : String.valueOf(cmsMaster.getCmsNumberInHousehold()));
         }
 
         if (field != null) {
@@ -211,7 +211,7 @@ public class TherapDomainFactory {
         arClientFamilyMember1.setAge(StringUtils.isEmpty(finance.getDdcmCmfAge1()) ? null : Integer.valueOf(finance.getDdcmCmfAge1()));
         arClientFamilyMember1.setMonthlyIncome(finance.getDdcmCmfIncome1());
         arClientFamilyMember1.setRelationship(finance.getDdcmCmfRelation1() == null ? null : String.valueOf(finance.getDdcmCmfRelation1()));
-        arClientFamilyMember.setSourceOfIncome(finance.getDdcmCmfSource1());
+        arClientFamilyMember1.setSourceOfIncome(finance.getDdcmCmfSource1());
 
         arClientFamilyMembers.add(arClientFamilyMember1);
 
@@ -220,7 +220,7 @@ public class TherapDomainFactory {
         arClientFamilyMember2.setAge(StringUtils.isEmpty(finance.getDdcmCmfAge2()) ? null : Integer.valueOf(finance.getDdcmCmfAge2()));
         arClientFamilyMember2.setMonthlyIncome(finance.getDdcmCmfIncome2());
         arClientFamilyMember2.setRelationship(finance.getDdcmCmfRelation2() == null ? null : String.valueOf(finance.getDdcmCmfRelation2()));
-        arClientFamilyMember.setSourceOfIncome(finance.getDdcmCmfSource2());
+        arClientFamilyMember2.setSourceOfIncome(finance.getDdcmCmfSource2());
 
         arClientFamilyMembers.add(arClientFamilyMember2);
 
@@ -229,7 +229,7 @@ public class TherapDomainFactory {
         arClientFamilyMember3.setAge(StringUtils.isEmpty(finance.getDdcmCmfAge3()) ? null : Integer.valueOf(finance.getDdcmCmfAge3()));
         arClientFamilyMember3.setMonthlyIncome(finance.getDdcmCmfIncome3());
         arClientFamilyMember3.setRelationship(finance.getDdcmCmfRelation3() == null ? null : String.valueOf(finance.getDdcmCmfRelation3()));
-        arClientFamilyMember.setSourceOfIncome(finance.getDdcmCmfSource3());
+        arClientFamilyMember3.setSourceOfIncome(finance.getDdcmCmfSource3());
 
         arClientFamilyMembers.add(arClientFamilyMember3);
 
@@ -238,7 +238,7 @@ public class TherapDomainFactory {
         arClientFamilyMember4.setAge(StringUtils.isEmpty(finance.getDdcmCmfAge4()) ? null : Integer.valueOf(finance.getDdcmCmfAge4()));
         arClientFamilyMember4.setMonthlyIncome(finance.getDdcmCmfIncome4());
         arClientFamilyMember4.setRelationship(finance.getDdcmCmfRelation4() == null ? null : String.valueOf(finance.getDdcmCmfRelation4()));
-        arClientFamilyMember.setSourceOfIncome(finance.getDdcmCmfSource4());
+        arClientFamilyMember4.setSourceOfIncome(finance.getDdcmCmfSource4());
 
         arClientFamilyMembers.add(arClientFamilyMember4);
 
@@ -247,7 +247,7 @@ public class TherapDomainFactory {
         arClientFamilyMember5.setAge(StringUtils.isEmpty(finance.getDdcmCmfAge5()) ? null : Integer.valueOf(finance.getDdcmCmfAge5()));
         arClientFamilyMember5.setMonthlyIncome(finance.getDdcmCmfIncome5());
         arClientFamilyMember5.setRelationship(finance.getDdcmCmfRelation5() == null ? null : String.valueOf(finance.getDdcmCmfRelation5()));
-        arClientFamilyMember.setSourceOfIncome(finance.getDdcmCmfSource5());
+        arClientFamilyMember5.setSourceOfIncome(finance.getDdcmCmfSource5());
 
         arClientFamilyMembers.add(arClientFamilyMember5);
 
@@ -256,7 +256,7 @@ public class TherapDomainFactory {
         arClientFamilyMember6.setAge(StringUtils.isEmpty(finance.getDdcmCmfAge6()) ? null : Integer.valueOf(finance.getDdcmCmfAge6()));
         arClientFamilyMember6.setMonthlyIncome(finance.getDdcmCmfIncome6());
         arClientFamilyMember6.setRelationship(finance.getDdcmCmfRelation6() == null ? null : String.valueOf(finance.getDdcmCmfRelation6()));
-        arClientFamilyMember.setSourceOfIncome(finance.getDdcmCmfSource6());
+        arClientFamilyMember6.setSourceOfIncome(finance.getDdcmCmfSource6());
 
         arClientFamilyMembers.add(arClientFamilyMember6);
 
@@ -265,7 +265,7 @@ public class TherapDomainFactory {
         arClientFamilyMember7.setAge(StringUtils.isEmpty(finance.getDdcmCmfAge7()) ? null : Integer.valueOf(finance.getDdcmCmfAge7()));
         arClientFamilyMember7.setMonthlyIncome(finance.getDdcmCmfIncome7());
         arClientFamilyMember7.setRelationship(finance.getDdcmCmfRelation7() == null ? null : String.valueOf(finance.getDdcmCmfRelation7()));
-        arClientFamilyMember.setSourceOfIncome(finance.getDdcmCmfSource7());
+        arClientFamilyMember7.setSourceOfIncome(finance.getDdcmCmfSource7());
 
         arClientFamilyMembers.add(arClientFamilyMember7);
 
@@ -274,7 +274,7 @@ public class TherapDomainFactory {
         arClientFamilyMember8.setAge(StringUtils.isEmpty(finance.getDdcmCmfAge8()) ? null : Integer.valueOf(finance.getDdcmCmfAge8()));
         arClientFamilyMember8.setMonthlyIncome(finance.getDdcmCmfIncome8());
         arClientFamilyMember8.setRelationship(finance.getDdcmCmfRelation8() == null ? null : String.valueOf(finance.getDdcmCmfRelation8()));
-        arClientFamilyMember.setSourceOfIncome(finance.getDdcmCmfSource8());
+        arClientFamilyMember8.setSourceOfIncome(finance.getDdcmCmfSource8());
 
         arClientFamilyMembers.add(arClientFamilyMember8);
         return arClientFamilyMembers;
@@ -349,9 +349,9 @@ public class TherapDomainFactory {
         List<Race> raceList = new ArrayList<Race>();
         Integer raceCode = null;
 
-        if (master != null && StringUtils.isEmpty(master.getCmsRace())) {
+        if (master != null && StringUtils.isNotEmpty(master.getCmsRace())) {
             raceCode = cmsMasterClientRaceMap.get(master.getCmsRace());
-        } else if (ddsRoot != null && StringUtils.isEmpty(ddsRoot.getClientRace())) {
+        } else if (ddsRoot != null && StringUtils.isNotEmpty(ddsRoot.getClientRace())) {
             raceCode = ddsRootClientRaceMap.get(ddsRoot.getClientRace());
         }
 
