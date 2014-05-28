@@ -5,6 +5,7 @@ import net.therap.config.FormIdGeneratorBean;
 import net.therap.db.entity.ar.*;
 import net.therap.db.entity.common.*;
 import net.therap.db.util.CommonForm;
+import net.therap.db.util.Globals;
 import net.therap.model.ar.*;
 
 import java.util.*;
@@ -19,6 +20,7 @@ public class TherapDomainFactory {
     private static Map<String, Integer> ddsRootClientRaceMap = new HashMap<String, Integer>();
     private static Map<Integer, String> cmsMasterGenderMap = new HashMap<Integer, String>();
     private static Map<String, String> ddsRootGenderMap = new HashMap<String, String>();
+    private static Map<String, Integer> cmsMasterClientStatusMap = new HashMap<String, Integer>();
 
 
     static {
@@ -49,6 +51,15 @@ public class TherapDomainFactory {
         cmsMasterGenderMap.put(2, "F");
         cmsMasterGenderMap.put(3, "M");
 
+        cmsMasterClientStatusMap.put("A", Globals.CLIENT_STATUS_ADMITTED);
+        cmsMasterClientStatusMap.put("C", Globals.CLIENT_STATUS_DISCHARGED);
+        cmsMasterClientStatusMap.put("D", Globals.CLIENT_STATUS_DISCHARGED);
+        cmsMasterClientStatusMap.put("J", Globals.CLIENT_STATUS_ADMITTED);
+        cmsMasterClientStatusMap.put("K", Globals.CLIENT_STATUS_ADMITTED);
+        cmsMasterClientStatusMap.put("P", Globals.CLIENT_STATUS_PENDING);
+        cmsMasterClientStatusMap.put("X", Globals.CLIENT_STATUS_ADMITTED);
+        cmsMasterClientStatusMap.put("W", Globals.CLIENT_STATUS_DISCHARGED);
+
 
     }
 
@@ -64,6 +75,7 @@ public class TherapDomainFactory {
             client.setSsn(ddsRoot.getClientSsn() != null ? String.valueOf(ddsRoot.getClientSsn()) : null);
             client.setBirthDate(ddsRoot.getClientDateOfBirth());
             client.setGender(ddsRootGenderMap.get(ddsRoot.getClientSex()));
+            client.setStatus(Globals.CLIENT_STATUS_ADMITTED);
 
             setClientNameByDdsRoot(client, ddsRoot);
         }
@@ -75,6 +87,11 @@ public class TherapDomainFactory {
             client.setSsn(cmsMaster.getCmsSsn() != null ? String.valueOf(cmsMaster.getCmsSsn()) : client.getSsn());
             client.setBirthDate(cmsMaster.getCmsDob() != null ? cmsMaster.getCmsDob() : client.getBirthDate());
             client.setGender(cmsMaster.getCmsSex() != null ? cmsMasterGenderMap.get(cmsMaster.getCmsSex()) : client.getGender());
+            if (cmsMaster.getCmsStatus() != null) {
+                client.setStatus(cmsMasterClientStatusMap.get(cmsMaster.getCmsStatus()));
+            } else if (client.getStatus() == 0) {
+                client.setStatus(Globals.CLIENT_STATUS_PENDING);
+            }
             setClientNameByCmsMaster(client, cmsMaster);
         }
 
@@ -103,20 +120,17 @@ public class TherapDomainFactory {
         client.setLastName(ddsRoot.getClientLastname());
     }
 
-
     public static ClientDetail createClientDetail(CmsMaster cmsMaster, DdsRoot ddsRoot) {
 
         ClientDetail clientDetail = new ClientDetail();
 
         if (cmsMaster != null) {
-            //clientDetail.setMailingStreet1(cmsMaster.getCmsMailAddress());
-            //clientDetail.setMailingStreet2(cmsMaster.getCmsMailAddress());
+            clientDetail.setMailingStreet1(cmsMaster.getCmsMailAddress());
             clientDetail.setMailingCity(cmsMaster.getCmsMailCity());
             clientDetail.setMailingState(cmsMaster.getCmsMailState());
             clientDetail.setMailingZip(
                     StringUtils.joinWithDelimiter("-", cmsMaster.getCmsMailZip(), cmsMaster.getCmsMailZip2()));
-//            clientDetail.setRaStreet1(cmsMaster.getCmsResAddress());
-//            clientDetail.setRaStreet2(cmsMaster.getCmsResAddress());
+            clientDetail.setRaStreet1(cmsMaster.getCmsResAddress());
             clientDetail.setRaCity(cmsMaster.getCmsResCity());
             clientDetail.setRaState(cmsMaster.getCmsResState());
             clientDetail.setRaZip(StringUtils.joinWithDelimiter("-", cmsMaster.getCmsResZip(), cmsMaster.getCmsResZip2()));
@@ -124,7 +138,6 @@ public class TherapDomainFactory {
 
         clientDetail.setRaceList(createRaceList(cmsMaster, ddsRoot));
 
-        //Remaining fields : cms mail address, cms res address
         return clientDetail;
     }
 
@@ -364,7 +377,6 @@ public class TherapDomainFactory {
         return raceList;
     }
 
-
     public static Oversight createArClientOversight(Client client, Provider provider, String assignedId) {
 
         Oversight oversight = new Oversight();
@@ -378,6 +390,5 @@ public class TherapDomainFactory {
 
         return oversight;
     }
-
 
 }
