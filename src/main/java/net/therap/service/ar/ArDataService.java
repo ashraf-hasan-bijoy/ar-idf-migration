@@ -91,4 +91,22 @@ public class ArDataService {
 
         return CollectionUtils.isNotEmpty(ddsFields) ? ddsFields.get(0) : null;
     }
+
+    public boolean isActiveEiClientExists(long clientId) {
+        List<ActiveEiClient> activeEiClients = em.createQuery("SELECT cl FROM ActiveEiClient cl" +
+                " WHERE cl.clientId = :clientId", ActiveEiClient.class)
+                .setParameter("clientId", clientId)
+                .getResultList();
+
+        return CollectionUtils.isNotEmpty(activeEiClients);
+    }
+
+    public String getDdsIfspTypeByClientId(long clientId) {
+        List<DdsIfspSerialized> ddsIfspSerializeds = em.createQuery("SELECT ifsp FROM DdsIfspSerialized ifsp" +
+                " WHERE ifsp.clientId = :clientId", DdsIfspSerialized.class)
+                .setParameter("clientId", clientId)
+                .getResultList();
+
+        return CollectionUtils.isNotEmpty(ddsIfspSerializeds) ? ddsIfspSerializeds.get(0).getType() : null;
+    }
 }

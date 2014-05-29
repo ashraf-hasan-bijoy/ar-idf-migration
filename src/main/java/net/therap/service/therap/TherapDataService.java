@@ -1,5 +1,6 @@
 package net.therap.service.therap;
 
+import net.therap.db.entity.ar.ArClient;
 import net.therap.db.entity.common.Client;
 import net.therap.db.entity.common.Provider;
 import net.therap.db.entity.medicalInfo.DiagnosisCode;
@@ -68,6 +69,17 @@ public class TherapDataService {
                 .longValue();
 
         return String.valueOf(oversightSeqId);
+    }
+
+    public ArClient getArClient(long ddsId, long cmsId){
+        List<ArClient> arClientList = em.createQuery("SELECT client FROM ArClient client" +
+                " WHERE client.ddsId = :ddsId" +
+                " AND client.cmsId = :cmsId", ArClient.class)
+                .setParameter("ddsId", ddsId)
+                .setParameter("cmsId", cmsId)
+                .getResultList();
+
+        return CollectionUtils.isNotEmpty(arClientList) ? arClientList.get(0) : null;
     }
 
 }

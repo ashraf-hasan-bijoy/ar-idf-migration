@@ -11,6 +11,7 @@
        http://www.springframework.org/schema/tx/spring-tx.xsd">
 
     <context:component-scan base-package="net.therap"/>
+    <context:property-placeholder location="classpath:app.properties"/>
 
     <bean class="net.therap.config.DbConfig" id="config"/>
 
@@ -40,4 +41,6 @@
         <property name="persistenceUnitName" value="ar"/>
         <property name="packagesToScan" value="net.therap.model.ar"/>
     </bean>
+
+    <bean id="activeProvider" factory-bean="therapProviderFactory" factory-method="getActiveProvider"/>
 </beans>
