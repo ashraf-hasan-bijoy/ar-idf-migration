@@ -52,6 +52,10 @@ public class ArIdfMigrationService {
 
             if (CollectionUtils.isNotEmpty(cmsMasters)) {
                 for (CmsMaster master : cmsMasters) {
+                    if (!isValidCmsMaster(master)) {
+                        continue;
+                    }
+
                     long clientId = master.getCmsPcpExemptDate();
                     DdsRoot ddsRoot = arDataService.getDdsRootByClientId(clientId);
 
@@ -141,5 +145,19 @@ public class ArIdfMigrationService {
         }
 
         return code;
+    }
+
+    private boolean isValidCmsMaster(CmsMaster master) {
+        String status = master.getCmsStatus();
+        boolean isValid = false;
+
+        List<String> validStatusList = Arrays.asList("A", "J", "K", "P", "X");
+        for (String validStatus : validStatusList) {
+            if (status.equals(validStatus)) {
+                isValid = true;
+            }
+        }
+
+        return isValid;
     }
 }

@@ -154,6 +154,7 @@ public class TherapDomainFactory {
             arClient.setPrimaryHomeLanguage(ddsRoot.getClientLanguage());
             arClient.setNumberInHousehold(ddsRoot.getClientHouse());
             arClient.setDdsId(ddsRoot.getClientId());
+            arClient.setDdsStatus(StringUtils.isNotEmpty(ddsRoot.getClientStatus()) ? ArDdsStatus.valueOf(ddsRoot.getClientStatus()) : null);
         }
 
         if (cmsMaster != null) {
@@ -376,6 +377,24 @@ public class TherapDomainFactory {
 
         return raceList;
     }
+
+//    public static ArClientGuardianAddress createGuardianAddress(DdsFinancial ddsFinancial, DdsField ddsField) {
+//        ArClientGuardianAddress guardianAddress = new ArClientGuardianAddress();
+//        if (ddsFinancial != null) {
+//            guardianAddress.setGuardianType(ArGuardianType.valueOf(ddsFinancial.getGuardianType()));
+//            guardianAddress.setAddress(ddsFinancial.getGuardianAddress());
+//            guardianAddress.setCity(ddsFinancial.getGuardianCity());
+//            guardianAddress.setState(ddsFinancial.getGuardianState());
+//            guardianAddress.setZip(ddsFinancial.getGuardianZip());
+//            guardianAddress.setPhone1(ddsFinancial.getGuardianPhone());
+//        }
+//
+//        if (ddsField != null) {
+//            guardianAddress.setGuardianType(ArGuardianType.FATHER);
+//            guardianAddress.setName(ddsField.getFather);
+//        }
+//        return guardianAddress;
+//    }
 
     public static Oversight createArClientOversight(Client client, Provider provider, String assignedId) {
 
