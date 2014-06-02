@@ -33,7 +33,7 @@ public class DdsCmFinance {
     @Column(name = "DDCM_CMF_AGE")
     private String ddcmCmfAge;
     @Column(name = "DDCM_CMF_INCOME")
-    private Long ddcmCmfIncome;
+    private Double ddcmCmfIncome;
     @Column(name = "DDCM_CMF_SOURCE")
     private String ddcmCmfSource;
     @Column(name = "DDCM_CMF_NAME_1")
@@ -43,7 +43,7 @@ public class DdsCmFinance {
     @Column(name = "DDCM_CMF_AGE_1")
     private String ddcmCmfAge1;
     @Column(name = "DDCM_CMF_INCOME_1")
-    private Long ddcmCmfIncome1;
+    private Double ddcmCmfIncome1;
     @Column(name = "DDCM_CMF_SOURCE_1")
     private String ddcmCmfSource1;
     @Column(name = "DDCM_CMF_NAME_2")
@@ -53,7 +53,7 @@ public class DdsCmFinance {
     @Column(name = "DDCM_CMF_AGE_2")
     private String ddcmCmfAge2;
     @Column(name = "DDCM_CMF_INCOME_2")
-    private Long ddcmCmfIncome2;
+    private Double ddcmCmfIncome2;
     @Column(name = "DDCM_CMF_SOURCE_2")
     private String ddcmCmfSource2;
     @Column(name = "DDCM_CMF_NAME_3")
@@ -63,7 +63,7 @@ public class DdsCmFinance {
     @Column(name = "DDCM_CMF_AGE_3")
     private String ddcmCmfAge3;
     @Column(name = "DDCM_CMF_INCOME_3")
-    private Long ddcmCmfIncome3;
+    private Double ddcmCmfIncome3;
     @Column(name = "DDCM_CMF_SOURCE_3")
     private String ddcmCmfSource3;
     @Column(name = "DDCM_CMF_NAME_4")
@@ -73,7 +73,7 @@ public class DdsCmFinance {
     @Column(name = "DDCM_CMF_AGE_4")
     private String ddcmCmfAge4;
     @Column(name = "DDCM_CMF_INCOME_4")
-    private Long ddcmCmfIncome4;
+    private Double ddcmCmfIncome4;
     @Column(name = "DDCM_CMF_SOURCE_4")
     private String ddcmCmfSource4;
     @Column(name = "DDCM_CMF_NAME_5")
@@ -83,7 +83,7 @@ public class DdsCmFinance {
     @Column(name = "DDCM_CMF_AGE_5")
     private String ddcmCmfAge5;
     @Column(name = "DDCM_CMF_INCOME_5")
-    private Long ddcmCmfIncome5;
+    private Double ddcmCmfIncome5;
     @Column(name = "DDCM_CMF_SOURCE_5")
     private String ddcmCmfSource5;
     @Column(name = "DDCM_CMF_NAME_6")
@@ -93,7 +93,7 @@ public class DdsCmFinance {
     @Column(name = "DDCM_CMF_AGE_6")
     private String ddcmCmfAge6;
     @Column(name = "DDCM_CMF_INCOME_6")
-    private Long ddcmCmfIncome6;
+    private Double ddcmCmfIncome6;
     @Column(name = "DDCM_CMF_SOURCE_6")
     private String ddcmCmfSource6;
     @Column(name = "DDCM_CMF_NAME_7")
@@ -103,7 +103,7 @@ public class DdsCmFinance {
     @Column(name = "DDCM_CMF_AGE_7")
     private String ddcmCmfAge7;
     @Column(name = "DDCM_CMF_INCOME_7")
-    private Long ddcmCmfIncome7;
+    private Double ddcmCmfIncome7;
     @Column(name = "DDCM_CMF_SOURCE_7")
     private String ddcmCmfSource7;
     @Column(name = "DDCM_CMF_NAME_8")
@@ -113,7 +113,7 @@ public class DdsCmFinance {
     @Column(name = "DDCM_CMF_AGE_8")
     private String ddcmCmfAge8;
     @Column(name = "DDCM_CMF_INCOME_8")
-    private Long ddcmCmfIncome8;
+    private Double ddcmCmfIncome8;
     @Column(name = "DDCM_CMF_SOURCE_8")
     private String ddcmCmfSource8;
     @Column(name = "DDCM_DENY_RES_SSI")
@@ -209,11 +209,11 @@ public class DdsCmFinance {
         this.ddcmCmfAge = ddcmCmfAge;
     }
 
-    public Long getDdcmCmfIncome() {
+    public Double getDdcmCmfIncome() {
         return ddcmCmfIncome;
     }
 
-    public void setDdcmCmfIncome(Long ddcmCmfIncome) {
+    public void setDdcmCmfIncome(Double ddcmCmfIncome) {
         this.ddcmCmfIncome = ddcmCmfIncome;
     }
 
@@ -249,11 +249,11 @@ public class DdsCmFinance {
         this.ddcmCmfAge1 = ddcmCmfAge1;
     }
 
-    public Long getDdcmCmfIncome1() {
+    public Double getDdcmCmfIncome1() {
         return ddcmCmfIncome1;
     }
 
-    public void setDdcmCmfIncome1(Long ddcmCmfIncome1) {
+    public void setDdcmCmfIncome1(Double ddcmCmfIncome1) {
         this.ddcmCmfIncome1 = ddcmCmfIncome1;
     }
 
@@ -289,11 +289,11 @@ public class DdsCmFinance {
         this.ddcmCmfAge2 = ddcmCmfAge2;
     }
 
-    public Long getDdcmCmfIncome2() {
+    public Double getDdcmCmfIncome2() {
         return ddcmCmfIncome2;
     }
 
-    public void setDdcmCmfIncome2(Long ddcmCmfIncome2) {
+    public void setDdcmCmfIncome2(Double ddcmCmfIncome2) {
         this.ddcmCmfIncome2 = ddcmCmfIncome2;
     }
 
@@ -329,11 +329,11 @@ public class DdsCmFinance {
         this.ddcmCmfAge3 = ddcmCmfAge3;
     }
 
-    public Long getDdcmCmfIncome3() {
+    public Double getDdcmCmfIncome3() {
         return ddcmCmfIncome3;
     }
 
-    public void setDdcmCmfIncome3(Long ddcmCmfIncome3) {
+    public void setDdcmCmfIncome3(Double ddcmCmfIncome3) {
         this.ddcmCmfIncome3 = ddcmCmfIncome3;
     }
 
@@ -369,11 +369,11 @@ public class DdsCmFinance {
         this.ddcmCmfAge4 = ddcmCmfAge4;
     }
 
-    public Long getDdcmCmfIncome4() {
+    public Double getDdcmCmfIncome4() {
         return ddcmCmfIncome4;
     }
 
-    public void setDdcmCmfIncome4(Long ddcmCmfIncome4) {
+    public void setDdcmCmfIncome4(Double ddcmCmfIncome4) {
         this.ddcmCmfIncome4 = ddcmCmfIncome4;
     }
 
@@ -409,11 +409,11 @@ public class DdsCmFinance {
         this.ddcmCmfAge5 = ddcmCmfAge5;
     }
 
-    public Long getDdcmCmfIncome5() {
+    public Double getDdcmCmfIncome5() {
         return ddcmCmfIncome5;
     }
 
-    public void setDdcmCmfIncome5(Long ddcmCmfIncome5) {
+    public void setDdcmCmfIncome5(Double ddcmCmfIncome5) {
         this.ddcmCmfIncome5 = ddcmCmfIncome5;
     }
 
@@ -449,11 +449,11 @@ public class DdsCmFinance {
         this.ddcmCmfAge6 = ddcmCmfAge6;
     }
 
-    public Long getDdcmCmfIncome6() {
+    public Double getDdcmCmfIncome6() {
         return ddcmCmfIncome6;
     }
 
-    public void setDdcmCmfIncome6(Long ddcmCmfIncome6) {
+    public void setDdcmCmfIncome6(Double ddcmCmfIncome6) {
         this.ddcmCmfIncome6 = ddcmCmfIncome6;
     }
 
@@ -489,11 +489,11 @@ public class DdsCmFinance {
         this.ddcmCmfAge7 = ddcmCmfAge7;
     }
 
-    public Long getDdcmCmfIncome7() {
+    public Double getDdcmCmfIncome7() {
         return ddcmCmfIncome7;
     }
 
-    public void setDdcmCmfIncome7(Long ddcmCmfIncome7) {
+    public void setDdcmCmfIncome7(Double ddcmCmfIncome7) {
         this.ddcmCmfIncome7 = ddcmCmfIncome7;
     }
 
@@ -529,11 +529,11 @@ public class DdsCmFinance {
         this.ddcmCmfAge8 = ddcmCmfAge8;
     }
 
-    public Long getDdcmCmfIncome8() {
+    public Double getDdcmCmfIncome8() {
         return ddcmCmfIncome8;
     }
 
-    public void setDdcmCmfIncome8(Long ddcmCmfIncome8) {
+    public void setDdcmCmfIncome8(Double ddcmCmfIncome8) {
         this.ddcmCmfIncome8 = ddcmCmfIncome8;
     }
 

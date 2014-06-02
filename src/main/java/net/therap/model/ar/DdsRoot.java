@@ -51,8 +51,6 @@ public class DdsRoot {
     private String clientHouse;
     @Column(name = "client_status")
     private String clientStatus;
-    @Column(name = "client_medicaid_type")
-    private String clientMedicaidType;
     @Column(name = "client_disability_1")
     private String clientDisability1;
     @Column(name = "client_disability_2")
@@ -61,6 +59,8 @@ public class DdsRoot {
     private String clientSubDisability1;
     @Column(name = "client_sub_disability_2")
     private String clientSubDisability2;
+    @Column(name = "valid_data")
+    private Integer validData;
 
     public Long getClientId() {
         return clientId;
@@ -206,14 +206,6 @@ public class DdsRoot {
         this.clientStatus = clientStatus;
     }
 
-    public String getClientMedicaidType() {
-        return clientMedicaidType;
-    }
-
-    public void setClientMedicaidType(String clientMedicaidType) {
-        this.clientMedicaidType = clientMedicaidType;
-    }
-
     public String getClientDisability1() {
         return clientDisability1;
     }
@@ -244,5 +236,13 @@ public class DdsRoot {
 
     public void setClientSubDisability2(String clientSubDisability2) {
         this.clientSubDisability2 = clientSubDisability2;
+    }
+
+    public Integer getValidData() {
+        return validData;
+    }
+
+    public void setValidData(Integer validData) {
+        this.validData = validData;
     }
 }

@@ -1,9 +1,6 @@
 package net.therap.model.ar;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
 
 /**
  * @author jawad
@@ -13,16 +10,26 @@ import javax.persistence.Table;
 @Table(name = "AR_DDS_IFSP_SERIALIZED")
 public class DdsIfspSerialized {
     @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private long id;
     @Column(name = "client_id")
-    private long clientId;
+    private Long clientId;
     @Column(name = "type")
     private String type;
 
-    public long getClientId() {
+    public long getId() {
+        return id;
+    }
+
+    public void setId(long id) {
+        this.id = id;
+    }
+
+    public Long getClientId() {
         return clientId;
     }
 
-    public void setClientId(long clientId) {
+    public void setClientId(Long clientId) {
         this.clientId = clientId;
     }
 

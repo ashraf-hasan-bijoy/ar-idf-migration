@@ -71,11 +71,18 @@ public class MigrationDataUnit {
         this.individualDiagnosisList = individualDiagnosisList;
     }
 
-    public String getClientInfo(){
-        return "Client Name : " + StringUtils.join(client.getLastName(), client.getMiddleName(), client.getFirstName())  +
-                " DDS ID :" + arClient.getDdsId() +
-                " CMS ID :" + arClient.getCmsId() +
-                " SSN Number :" + client.getSsn() +
-                " Date of Birth :" + client.getBirthDate();
+    public String getSavedEntityInfo() {
+        StringBuilder info = new StringBuilder();
+        info.append(" Form Id :").append(client.getFormId());
+        info.append(" Client Id : ").append(client.getId());
+        info.append(" ArClient Id : ").append(arClient.getId());
+
+        if (CollectionUtils.isNotEmpty(individualDiagnosisList)) {
+            for (IndividualDiagnosis diagnosis : individualDiagnosisList) {
+                info.append(" Individual Diagnosis Id : ").append(diagnosis.getId());
+            }
+        }
+
+        return info.toString();
     }
 }

@@ -1,9 +1,6 @@
 package net.therap.model.ar;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
 import java.util.Date;
 
 /**
@@ -14,6 +11,8 @@ import java.util.Date;
 @Table(name = "AR_DDS_MED_DENIAL")
 public class MedicaidDenial {
     @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private Long id;
     @Column(name = "client_id")
     private Long clientId;
     @Column(name = "medicaid_denial_start_date")
@@ -22,6 +21,14 @@ public class MedicaidDenial {
     private Date medicaidDenialEndDate;
     @Column(name = "medicaid_denial_option_delete")
     private String medicaidDenialOptionDelete;
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
 
     public Long getClientId() {
         return clientId;

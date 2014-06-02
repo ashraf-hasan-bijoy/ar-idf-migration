@@ -34,6 +34,7 @@
 
     <tx:annotation-driven transaction-manager="oracleTm"/>
 
+
     <!-- Config for h2db database -->
 
     <bean id="h2dbEntityManagerFactory" class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean">
@@ -42,5 +43,7 @@
         <property name="packagesToScan" value="net.therap.model.ar"/>
     </bean>
 
-    <bean id="activeProvider" factory-bean="therapProviderFactory" factory-method="getActiveProvider"/>
+    <bean id="activeProvider" factory-bean="therapCommonDataProvider" factory-method="getActiveProvider"/>
+
+    <bean id="activeCountry" factory-bean="therapCommonDataProvider" factory-method="getCountry"/>
 </beans>

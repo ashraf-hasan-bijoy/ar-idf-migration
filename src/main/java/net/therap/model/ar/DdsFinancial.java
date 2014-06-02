@@ -18,7 +18,7 @@ public class DdsFinancial {
     @Column(name = "guardian_type")
     private String guardianType;
     @Column(name = "guardian_name")
-    private String name;
+    private String guardianName;
     @Column(name = "guardian_address")
     private String guardianAddress;
     @Column(name = "guardian_city")
@@ -46,12 +46,12 @@ public class DdsFinancial {
         this.guardianType = guardianType;
     }
 
-    public String getName() {
-        return name;
+    public String getGuardianName() {
+        return guardianName;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setGuardianName(String guardianName) {
+        this.guardianName = guardianName;
     }
 
     public String getGuardianAddress() {

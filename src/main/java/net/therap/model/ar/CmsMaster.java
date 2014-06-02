@@ -108,6 +108,8 @@ public class CmsMaster {
     private Integer cmsResZip2;
     @Column(name = "CMS_3PTYL")
     private String cms3ptyl;
+    @Column(name = "valid_data")
+    private Integer validData;
 
 
     public Long getCmsId() {
@@ -484,5 +486,13 @@ public class CmsMaster {
 
     public void setCms3ptyl(String cms3ptyl) {
         this.cms3ptyl = cms3ptyl;
+    }
+
+    public Integer getValidData() {
+        return validData;
+    }
+
+    public void setValidData(Integer validData) {
+        this.validData = validData;
     }
 }

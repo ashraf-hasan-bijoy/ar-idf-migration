@@ -2,6 +2,7 @@ package net.therap.service.therap;
 
 import net.therap.db.entity.ar.ArClient;
 import net.therap.db.entity.common.Client;
+import net.therap.db.entity.common.Country;
 import net.therap.db.entity.common.Provider;
 import net.therap.db.entity.medicalInfo.DiagnosisCode;
 import net.therap.db.entity.medicalInfo.IndividualDiagnosis;
@@ -30,7 +31,6 @@ public class TherapDataService {
     private EntityManager em;
 
     public void saveTherapIdf(MigrationDataUnit unit) {
-        try {
             em.persist(unit.getClient());
             em.persist(unit.getClientDetail());
             em.persist(unit.getArClient());
@@ -40,11 +40,6 @@ public class TherapDataService {
                     em.persist(diagnosis);
                 }
             }
-            em.flush();
-            log.debug("Successfully saved. " + unit.getClientInfo());
-        } catch (Exception e) {
-            log.debug("Failed. " + unit.getClientInfo());
-        }
     }
 
     public DiagnosisCode getIndividualDiagnosis(String code) {
@@ -71,7 +66,7 @@ public class TherapDataService {
         return String.valueOf(oversightSeqId);
     }
 
-    public ArClient getArClient(long ddsId, long cmsId){
+    public ArClient getArClient(long ddsId, long cmsId) {
         List<ArClient> arClientList = em.createQuery("SELECT client FROM ArClient client" +
                 " WHERE client.ddsId = :ddsId" +
                 " AND client.cmsId = :cmsId", ArClient.class)
@@ -80,6 +75,10 @@ public class TherapDataService {
                 .getResultList();
 
         return CollectionUtils.isNotEmpty(arClientList) ? arClientList.get(0) : null;
+    }
+
+    public Country getCountry() {
+        return em.find(Country.class, 1);
     }
 
 }

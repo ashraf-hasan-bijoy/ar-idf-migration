@@ -1,8 +1,6 @@
 package net.therap.model.ar;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Table;
+import javax.persistence.*;
 
 /**
  * @author jawad
@@ -11,9 +9,19 @@ import javax.persistence.Table;
 @Entity
 @Table(name = "Active_Ei_Client")
 public class ActiveEiClient {
-
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private long id;
     @Column(name = "client_id")
     private long clientId;
+
+    public long getId() {
+        return id;
+    }
+
+    public void setId(long id) {
+        this.id = id;
+    }
 
     public long getClientId() {
         return clientId;
@@ -23,3 +31,4 @@ public class ActiveEiClient {
         this.clientId = clientId;
     }
 }
+
